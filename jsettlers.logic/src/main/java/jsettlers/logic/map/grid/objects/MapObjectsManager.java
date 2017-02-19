@@ -14,11 +14,7 @@
  *******************************************************************************/
 package jsettlers.logic.map.grid.objects;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.util.PriorityQueue;
-
+import java8.util.Optional;
 import jsettlers.common.landscape.EResourceType;
 import jsettlers.common.map.shapes.HexGridArea;
 import jsettlers.common.mapobject.EMapObjectType;
@@ -52,7 +48,10 @@ import jsettlers.logic.player.Player;
 import jsettlers.logic.timer.IScheduledTimerable;
 import jsettlers.logic.timer.RescheduleTimer;
 
-import java8.util.Optional;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.PriorityQueue;
 
 /**
  * This class manages the MapObjects on the grid. It handles timed events like growth interrupts of a tree or deletion of arrows.
@@ -227,7 +226,7 @@ public final class MapObjectsManager implements IScheduledTimerable, Serializabl
 		return false;
 	}
 
-	private final boolean addMapObject(ShortPoint2D pos, AbstractHexMapObject mapObject) {
+	public final boolean addMapObject(ShortPoint2D pos, AbstractHexMapObject mapObject) {
 		return addMapObject(pos.x, pos.y, mapObject);
 	}
 

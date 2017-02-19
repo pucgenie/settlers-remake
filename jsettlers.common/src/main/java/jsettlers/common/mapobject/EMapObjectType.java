@@ -142,7 +142,14 @@ public enum EMapObjectType {
 	/**
 	 * doesn't need to be drawn.
 	 */
-	INFORMABLE_MAP_OBJECT;
+	INFORMABLE_MAP_OBJECT,
+
+	STOCK_BUILDING_PART_NORTH,
+	STOCK_BUILDING_PART_NORTH_EAST,
+	STOCK_BUILDING_PART_SOUTH_EAST,
+	STOCK_BUILDING_PART_SOUTH,
+	STOCK_BUILDING_PART_SOUTH_WEST,
+	STOCK_BUILDING_PART_NORTH_WEST;
 
 	public static final EMapObjectType[] VALUES = EMapObjectType.values();
 	public final byte ordinal;

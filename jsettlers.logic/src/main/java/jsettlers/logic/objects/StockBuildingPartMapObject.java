@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 - 2017
+ * Copyright (c) 2017
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -15,27 +15,26 @@
 package jsettlers.logic.objects;
 
 import jsettlers.common.mapobject.EMapObjectType;
-import jsettlers.logic.buildings.stack.IStackSizeSupplier;
-import jsettlers.logic.constants.Constants;
+import jsettlers.logic.buildings.others.StockBuilding;
 import jsettlers.logic.map.grid.objects.AbstractHexMapObject;
 
-public class WineBowlMapObject extends AbstractHexMapObject {
-	private static final long serialVersionUID = -174985264395107962L;
+public class StockBuildingPartMapObject extends AbstractHexMapObject {
+	private final StockBuilding stockBuilding;
+	private final EMapObjectType mapObjectType;
 
-	private final IStackSizeSupplier wineStack;
-
-	public WineBowlMapObject(IStackSizeSupplier wineStack) {
-		this.wineStack = wineStack;
+	public StockBuildingPartMapObject(StockBuilding stockBuilding, EMapObjectType mapObjectType) {
+		this.stockBuilding = stockBuilding;
+		this.mapObjectType = mapObjectType;
 	}
 
 	@Override
 	public EMapObjectType getObjectType() {
-		return EMapObjectType.WINE_BOWL;
+		return mapObjectType;
 	}
 
 	@Override
 	public float getStateProgress() {
-		return ((float) wineStack.getStackSize()) / Constants.STACK_SIZE;
+		return stockBuilding.getStateProgress();
 	}
 
 	@Override
