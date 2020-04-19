@@ -99,7 +99,7 @@ public class ServerManager implements IServerManager {
 			try {
 				player.leaveMatch();
 			} catch (IllegalStateException e) {
-				assert false : "This may never happen here!";
+				throw new AssertionError("This may never happen here!", e);
 			}
 		}
 

@@ -47,7 +47,7 @@ public class SetMaterialPrioritiesGuiTask extends SimpleGuiTask {
 	public SetMaterialPrioritiesGuiTask(byte playerId, ShortPoint2D managerPosition, EMaterialType[] materialTypeForPriority) {
 		super(EGuiAction.SET_MATERIAL_PRIORITIES, playerId);
 
-		assert materialTypeForPriority.length == EMaterialType.NUMBER_OF_DROPPABLE_MATERIALS : "The given material types for priorities may only contain droppable materials";
+		if(materialTypeForPriority.length != EMaterialType.NUMBER_OF_DROPPABLE_MATERIALS) throw new AssertionError("The given material types for priorities may only contain droppable materials");
 
 		this.managerPosition = managerPosition;
 		this.materialTypeForPriority = materialTypeForPriority;

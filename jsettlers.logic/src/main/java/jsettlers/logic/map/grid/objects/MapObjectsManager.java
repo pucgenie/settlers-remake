@@ -381,7 +381,7 @@ public final class MapObjectsManager implements IScheduledTimerable, Serializabl
 	}
 
 	public boolean pushMaterial(int x, int y, EMaterialType materialType) {
-		assert materialType != null : "material type can never be null here";
+		if(materialType == null) throw new AssertionError("material type can never be null here");
 
 		StackMapObject stackObject = getStackAtPosition(x, y, materialType);
 
@@ -615,7 +615,7 @@ public final class MapObjectsManager implements IScheduledTimerable, Serializabl
 	 * 		The object to be added. NOTE: This object must be an instance of {@link IAttackableTowerMapObject}!
 	 */
 	public void addAttackableTowerObject(ShortPoint2D position, AbstractHexMapObject attackableTowerMapObject) {
-		assert attackableTowerMapObject instanceof IAttackableTowerMapObject;
+		if(!(attackableTowerMapObject instanceof IAttackableTowerMapObject)) throw new AssertionError();
 		this.addMapObject(position, attackableTowerMapObject);
 	}
 

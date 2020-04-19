@@ -107,7 +107,7 @@ public class OccupyingBuilding extends Building implements IBuilding.IOccupied, 
 	}
 
 	private void changePlayerTo(ShortPoint2D attackerPos) {
-		assert sortedOccupiers.isEmpty() : "there cannot be any occupiers in the tower when changing the player.";
+		if(!sortedOccupiers.isEmpty()) throw new AssertionError("there cannot be any occupiers in the tower when changing the player.");
 
 		ILogicMovable attacker = super.grid.getMovable(attackerPos);
 		Player newPlayer = attacker.getPlayer();
@@ -584,8 +584,7 @@ public class OccupyingBuilding extends Building implements IBuilding.IOccupied, 
 
 		@Override
 		public EMovableType getMovableType() {
-			assert false : "This should never have been called";
-			return EMovableType.SWORDSMAN_L1;
+			throw new AssertionError("This should never have been called");
 		}
 
 		@Override

@@ -27,7 +27,7 @@ public final class DoubleLinkedIntListItem extends DoubleLinkedListItem<DoubleLi
 
 	public DoubleLinkedIntListItem(int value) {
 		this.value = value;
-		assert value >= 0;
+		if(value < 0) throw new AssertionError();
 	}
 
 	public DoubleLinkedIntListItem() {

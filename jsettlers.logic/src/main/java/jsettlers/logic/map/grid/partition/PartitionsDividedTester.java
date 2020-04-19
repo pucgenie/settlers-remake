@@ -49,7 +49,7 @@ final class PartitionsDividedTester {
 	public static boolean isPartitionDivided(Partition[] partitionObjects, short[] partitions, short width, BorderPartitionInfo partition1,
 			MutableInt partition1Size, BorderPartitionInfo partition2, MutableInt partition2Size) {
 
-		assert partition1.partitionId == partition2.partitionId;
+		if(partition1.partitionId != partition2.partitionId) throw new AssertionError();
 
 		return posNotOnBorder(partitionObjects, partitions, width, partition1.positionOfPartition,
 				partition1.insideNeighborPosition, partition2.positionOfPartition, partition1.partitionId, partition1Size)

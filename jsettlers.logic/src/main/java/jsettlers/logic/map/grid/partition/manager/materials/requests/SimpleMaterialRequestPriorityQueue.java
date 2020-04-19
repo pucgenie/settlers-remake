@@ -45,7 +45,8 @@ public final class SimpleMaterialRequestPriorityQueue extends AbstractMaterialRe
 
 	@Override
 	public void moveObjectsOfPositionTo(ShortPoint2D position, AbstractMaterialRequestPriorityQueue newAbstractQueue) {
-		assert newAbstractQueue instanceof SimpleMaterialRequestPriorityQueue : "can't move positions between diffrent types of queues.";
+		if (!(newAbstractQueue instanceof SimpleMaterialRequestPriorityQueue))
+			throw new AssertionError("can't move positions between different types of queues.");
 
 		SimpleMaterialRequestPriorityQueue newQueue = (SimpleMaterialRequestPriorityQueue) newAbstractQueue;
 
@@ -64,7 +65,7 @@ public final class SimpleMaterialRequestPriorityQueue extends AbstractMaterialRe
 
 	@Override
 	public void mergeInto(AbstractMaterialRequestPriorityQueue newAbstractQueue) {
-		assert newAbstractQueue instanceof SimpleMaterialRequestPriorityQueue : "can't move positions between diffrent types of queues.";
+		if(!(newAbstractQueue instanceof SimpleMaterialRequestPriorityQueue)) throw new AssertionError("can't move positions between different types of queues.");
 
 		SimpleMaterialRequestPriorityQueue newQueue = (SimpleMaterialRequestPriorityQueue) newAbstractQueue;
 

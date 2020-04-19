@@ -31,7 +31,7 @@ public final class RessourceSignMapObject extends AbstractObjectsManagerObject {
 
 	public RessourceSignMapObject(ShortPoint2D pos, EResourceType resourceType, float amount) {
 		super(pos);
-		assert resourceType != EResourceType.FISH : "Wrong resource type for ResourceSignMapObeject!";
+		if(resourceType == EResourceType.FISH) throw new AssertionError("Wrong resource type for ResourceSignMapObeject!");
 
 		this.amount = amount;
 		this.objectType = resourceType.mapObjectType.ordinal;

@@ -60,10 +60,10 @@ public final class TempleBuilding extends Building {
 
 	private IRequestStack getWineStack() {
 		List<? extends IRequestStack> stacks = super.getStacks();
-		assert stacks.size() == 1;
+		if(stacks.size() != 1) throw new AssertionError();
 
 		IRequestStack wineStack = stacks.get(0);
-		assert wineStack.getMaterialType() == EMaterialType.WINE;
+		if(wineStack.getMaterialType() != EMaterialType.WINE) throw new AssertionError();
 		return wineStack;
 	}
 

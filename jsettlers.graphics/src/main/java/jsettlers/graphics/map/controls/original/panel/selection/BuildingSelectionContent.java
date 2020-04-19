@@ -294,7 +294,7 @@ public class BuildingSelectionContent extends AbstractSelectionContent {
 	 *            The selection this content is for.
 	 */
 	public BuildingSelectionContent(ISelectionSet selection) {
-		assert selection.getSize() == 1;
+		if(selection.getSize() != 1) throw new AssertionError();
 		building = (IBuilding) selection.get(0);
 
 		updatePanelContent();

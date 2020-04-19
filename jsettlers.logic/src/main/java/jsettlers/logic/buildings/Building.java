@@ -135,7 +135,7 @@ public abstract class Building extends AbstractHexMapObject implements IConstruc
 	}
 
 	public final void construct(boolean fullyConstructed) {
-		assert state == EBuildingState.CREATED : "building can not be constructed in this state";
+		if (state != EBuildingState.CREATED) throw new AssertionError("building can not be constructed in this state");
 
 		boolean itWorked = grid.setBuilding(pos, this);
 
@@ -304,8 +304,7 @@ public abstract class Building extends AbstractHexMapObject implements IConstruc
 			}
 
 		case BRICKLAYERS_REQUESTED: // the state changes are handled by tryToTakeMaterial()
-			assert false : "Building.timerEvent() should not be called in state: " + state;
-			return -1;
+			throw new AssertionError("Building.timerEvent() should not be called in state: " + state);
 
 		case CONSTRUCTED:
 			return subTimerEvent();

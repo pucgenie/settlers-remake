@@ -60,7 +60,7 @@ public final class ConstructionMarkObject extends AbstractHexMapObject {
 	}
 
 	public void setConstructionValue(byte constructionValue) {
-		assert constructionValue >= 0 : "construction value must be >= 0";
+		if(constructionValue < 0) throw new AssertionError("construction value must be >= 0");
 		this.constructionValue = ((float) constructionValue) / Byte.MAX_VALUE;
 	}
 

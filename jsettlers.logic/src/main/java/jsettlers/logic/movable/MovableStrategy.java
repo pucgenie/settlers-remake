@@ -119,8 +119,7 @@ public abstract class MovableStrategy implements Serializable {
 				return new CargoShipStrategy(movable);
 
 			default:
-				assert false : "requested movableType: " + movableType + " but have no strategy for this type!";
-				return null;
+				throw new AssertionError("requested movableType: " + movableType + " but have no strategy for this type!");
 		}
 	}
 

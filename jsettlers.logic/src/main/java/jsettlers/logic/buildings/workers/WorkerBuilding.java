@@ -67,8 +67,7 @@ public class WorkerBuilding extends WorkAreaBuilding implements IWorkerRequestBu
 
 	@Override
 	protected int subTimerEvent() {
-		assert false : "This should never be called, as this building should not be scheduled.";
-		return -1;
+		throw new AssertionError("This should never be called, as this building should not be scheduled.");
 	}
 
 	protected final boolean popMaterialFromStack(EMaterialType material) {

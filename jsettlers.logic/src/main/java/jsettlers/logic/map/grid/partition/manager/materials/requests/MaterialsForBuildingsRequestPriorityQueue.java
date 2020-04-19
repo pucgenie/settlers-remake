@@ -85,7 +85,7 @@ public final class MaterialsForBuildingsRequestPriorityQueue extends AbstractMat
 	protected DoubleLinkedList<MaterialRequestObject> getQueue(EPriority priority, EBuildingType buildingType) {
 		int buildingIndex = buildingTypesToIndex[buildingType.ordinal];
 
-		assert buildingIndex >= 0 : "Unknown building for this queue: " + buildingType;
+		if(buildingIndex < 0) throw new AssertionError("Unknown building for this queue: " + buildingType);
 
 		return queues[priority.ordinal][buildingIndex];
 	}
@@ -119,7 +119,7 @@ public final class MaterialsForBuildingsRequestPriorityQueue extends AbstractMat
 
 	@Override
 	public void moveObjectsOfPositionTo(ShortPoint2D position, AbstractMaterialRequestPriorityQueue newAbstractQueue) {
-		assert newAbstractQueue instanceof MaterialsForBuildingsRequestPriorityQueue : "can't move positions between different types of queues.";
+		if(!(newAbstractQueue instanceof MaterialsForBuildingsRequestPriorityQueue)) throw new AssertionError("can't move positions between different types of queues.");
 
 		MaterialsForBuildingsRequestPriorityQueue newQueue = (MaterialsForBuildingsRequestPriorityQueue) newAbstractQueue;
 
@@ -141,7 +141,7 @@ public final class MaterialsForBuildingsRequestPriorityQueue extends AbstractMat
 
 	@Override
 	public void mergeInto(AbstractMaterialRequestPriorityQueue newAbstractQueue) {
-		assert newAbstractQueue instanceof MaterialsForBuildingsRequestPriorityQueue : "can't move positions between different types of queues.";
+		if(!(newAbstractQueue instanceof MaterialsForBuildingsRequestPriorityQueue)) throw new AssertionError("can't move positions between different types of queues.");
 
 		MaterialsForBuildingsRequestPriorityQueue newQueue = (MaterialsForBuildingsRequestPriorityQueue) newAbstractQueue;
 

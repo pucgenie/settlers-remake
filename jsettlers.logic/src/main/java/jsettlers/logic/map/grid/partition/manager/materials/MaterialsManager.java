@@ -110,11 +110,11 @@ public final class MaterialsManager implements Serializable {
 
 		MaterialOffer offer = offersList.getOfferCloseTo(materialType, minimumIncludedOfferPriority, request.getPosition());
 
-		assert offer != null : "The offer can't be null here!";
+		if(offer == null) throw new AssertionError("The offer can't be null here!");
 
 		IManagerBearer jobless = joblessSupplier.removeJoblessCloseTo(offer.getPosition());
 
-		assert jobless != null : "The jobless can't be null here!";
+		if(jobless == null) throw new AssertionError("The jobless can't be null here!");
 
 		jobless.deliver(materialType, offer, request);
 	}

@@ -129,7 +129,7 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 			}
 
 			while (tasksPacket != null && tasksPacket.getLockstepNumber() <= lockstep) {
-				assert tasksPacket.getLockstepNumber() == lockstep : "FOUND TasksPacket FOR older lockstep!";
+				if(tasksPacket.getLockstepNumber() != lockstep) throw new AssertionError("FOUND TasksPacket FOR older lockstep!");
 
 				System.out.println("Executing SyncTaskPacket(" + tasksPacket + ") in " + getLockstepText(lockstep));
 
@@ -289,9 +289,10 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 
 	@Override
 	public void scheduleSyncTasksPacket(SyncTasksPacket tasksPacket) {
-		assert maxAllowedLockstep == Integer.MAX_VALUE
-				|| maxAllowedLockstep + 1 == tasksPacket.getLockstepNumber() : "received unlock for wrong step! current max allowed: "
-						+ maxAllowedLockstep + " new: " + tasksPacket.getLockstepNumber();
+		if (maxAllowedLockstep != Integer.MAX_VALUE && maxAllowedLockstep + 1 != tasksPacket.getLockstepNumber()) {
+			throw new AssertionError("received unlock for wrong step! current max allowed: "
+					+ maxAllowedLockstep + " new: " + tasksPacket.getLockstepNumber());
+		}
 
 		if (!tasksPacket.getTasks().isEmpty()) {
 			synchronized (tasks) {

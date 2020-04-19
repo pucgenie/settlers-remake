@@ -42,7 +42,7 @@ public abstract class PacketChannelListener<T extends Packet> implements IChanne
 	}
 
 	public PacketChannelListener(ENetworkKey[] keys, IDeserializingable<T>[] deserializers) {
-		assert keys.length == deserializers.length;
+		if(keys.length != deserializers.length) throw new AssertionError();
 
 		this.keys = keys;
 
@@ -59,7 +59,7 @@ public abstract class PacketChannelListener<T extends Packet> implements IChanne
 	@Override
 	public final void receive(ENetworkKey key, int length, DataInputStream stream) throws IOException, ClassNotFoundException {
 		IDeserializingable<T> deserializer = deserializers.get(key);
-		assert deserializer != null;
+		if(deserializer == null) throw new AssertionError();
 
 		T deserializedPacket = deserializer.deserialize(key, stream);
 		receivePacket(key, deserializedPacket);

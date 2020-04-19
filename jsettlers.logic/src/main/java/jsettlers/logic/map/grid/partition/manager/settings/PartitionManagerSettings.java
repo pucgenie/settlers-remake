@@ -83,7 +83,7 @@ public final class PartitionManagerSettings implements IPartitionSettings, Seria
 	 *            An array of all droppable {@link EMaterialType}s. The first element has the highest priority, the last one has the lowest.
 	 */
 	public void setMaterialPriorities(EMaterialType[] materialTypeForPriority) {
-		assert this.materialTypeForPriorities.length == materialTypeForPriority.length;
+		if(this.materialTypeForPriorities.length != materialTypeForPriority.length) throw new AssertionError();
 
 		for (int i = 0; i < materialTypeForPriority.length; i++) {
 			this.materialTypeForPriorities[i] = materialTypeForPriority[i];

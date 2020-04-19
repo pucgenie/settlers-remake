@@ -38,7 +38,7 @@ public class SetMaterialPrioritiesAction extends PointAction {
 			EMaterialType[] materialTypeForPriority) {
 		super(EActionType.SET_MATERIAL_PRIORITIES, managerPosition);
 
-		assert materialTypeForPriority.length == EMaterialType.NUMBER_OF_DROPPABLE_MATERIALS : "The given material types for priorities may only contain droppable materials";
+		if(materialTypeForPriority.length != EMaterialType.NUMBER_OF_DROPPABLE_MATERIALS) throw new AssertionError("The given material types for priorities may only contain droppable materials");
 
 		this.materialTypeForPriority = materialTypeForPriority;
 	}

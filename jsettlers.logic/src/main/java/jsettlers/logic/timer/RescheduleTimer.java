@@ -75,7 +75,7 @@ public final class RescheduleTimer implements INetworkTimerable, Serializable {
 		int delaySlots = delay / TIME_SLICE;
 		delaySlots = delaySlots > 0 ? delaySlots : 1; // ensure at least one slot delay
 
-		assert delaySlots < TIME_SLOTS : "SCHEDULED TO FAR IN THE FUTURE! " + delay + "ms";
+		if(delaySlots >= TIME_SLOTS) throw new AssertionError("SCHEDULED TO FAR IN THE FUTURE! " + delay + "ms");
 
 		timerables[(currTimeSlot + delaySlots) % TIME_SLOTS].add(t);
 	}

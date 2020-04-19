@@ -136,7 +136,7 @@ public final class BearerMovableStrategy extends MovableStrategy implements IMan
 			break;
 
 		case DEAD_OBJECT:
-			assert false : "we should never get here!";
+			throw new AssertionError("we should never get here!");
 		}
 	}
 

@@ -114,7 +114,7 @@ public final class SimpleSlotQueue<SlotType, ElementType extends ILocatable> imp
 	}
 
 	public void moveItemsForPosition(ShortPoint2D position, SimpleSlotQueue<SlotType, ElementType> otherSlotQueue) {
-		assert Arrays.equals(slotTypes, otherSlotQueue.slotTypes);
+		if(!Arrays.equals(slotTypes, otherSlotQueue.slotTypes)) throw new AssertionError();
 
 		for (int idx = 0; idx < slotLists.length; idx++) {
 			Iterator<ElementType> iter = slotLists[idx].iterator();
@@ -136,7 +136,7 @@ public final class SimpleSlotQueue<SlotType, ElementType extends ILocatable> imp
 	 * 		The other queue.
 	 */
 	public void addAll(SimpleSlotQueue<SlotType, ElementType> otherSlotQueue) {
-		assert Arrays.equals(slotTypes, otherSlotQueue.slotTypes);
+		if(!Arrays.equals(slotTypes, otherSlotQueue.slotTypes)) throw new AssertionError();
 
 		for (int idx = 0; idx < slotLists.length; idx++) {
 			slotLists[idx].addAll(otherSlotQueue.slotLists[idx]);

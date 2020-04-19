@@ -443,7 +443,7 @@ public final class PartitionsGrid implements Serializable {
 	 * @param partitionInfo2
 	 */
 	private void checkIfDividePartition(BorderPartitionInfo partitionInfo1, BorderPartitionInfo partitionInfo2) {
-		assert partitionInfo1.partitionId == partitionInfo2.partitionId;
+		if(partitionInfo1.partitionId != partitionInfo2.partitionId) throw new AssertionError();
 
 		final short partition = partitionInfo1.partitionId;
 
@@ -518,7 +518,7 @@ public final class PartitionsGrid implements Serializable {
 		biggerPartition = partitionObjects[biggerPartition].partitionId; // ensure that we have the top representative
 		smallerPartition = partitionObjects[smallerPartition].partitionId;
 
-		assert biggerPartition != smallerPartition : "the partitions can not be the same!";
+		if(biggerPartition == smallerPartition) throw new AssertionError("the partitions can not be the same!");
 
 		Partition biggerPartitionObject = partitionObjects[biggerPartition];
 		Partition smallerPartitionObject = partitionObjects[smallerPartition];

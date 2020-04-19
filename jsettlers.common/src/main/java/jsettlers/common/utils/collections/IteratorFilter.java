@@ -98,7 +98,7 @@ public class IteratorFilter<T> implements Iterable<T> {
 
 		@Override
 		public void remove() {
-			assert this.next == null : "remove may only be called after next() and before hasNext()";
+			if(this.next != null) throw new AssertionError("remove may only be called after next() and before hasNext()");
 			iterator.remove();
 		}
 	}

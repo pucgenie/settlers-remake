@@ -255,7 +255,7 @@ public class MapData implements IMapData {
 		System.out.println("Found " + tasks.size() + " tiles, starting to work on them...");
 		while (!tasks.isEmpty()) {
 			FadeTask task = tasks.poll();
-			assert contains(task.x, task.y);
+			if(!contains(task.x, task.y)) throw new AssertionError();
 
 			ELandscapeType[] fade = fader.getLandscapesBetween(task.type, landscapes[task.x][task.y]);
 

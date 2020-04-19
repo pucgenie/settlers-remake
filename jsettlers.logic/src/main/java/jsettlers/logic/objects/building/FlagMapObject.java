@@ -28,7 +28,7 @@ public final class FlagMapObject extends AbstractHexMapObject implements IPlayer
 	public FlagMapObject(EMapObjectType flagType, IPlayer player) {
 		this.flagType = flagType;
 		this.player = player;
-		assert flagType == EMapObjectType.FLAG_DOOR || flagType == EMapObjectType.FLAG_ROOF : "flag must be a flag";
+		if (flagType != EMapObjectType.FLAG_DOOR && flagType != EMapObjectType.FLAG_ROOF) throw new AssertionError("flag must be a flag");
 	}
 
 	@Override

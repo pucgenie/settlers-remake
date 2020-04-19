@@ -528,8 +528,7 @@ public final class Movable implements ILogicMovable {
 				return false;
 
 			default:
-				assert false : "got pushed in unhandled state: " + state;
-				return false;
+				throw new AssertionError("got pushed in unhandled state: " + state);
 		}
 	}
 
@@ -576,7 +575,7 @@ public final class Movable implements ILogicMovable {
 	 * @return {@link EMaterialType} that has been set before.
 	 */
 	final EMaterialType setMaterial(EMaterialType materialType) {
-		assert materialType != null : "MaterialType may not be null";
+		if(materialType == null) throw new AssertionError("MaterialType may not be null");
 		EMaterialType former = this.materialType;
 		this.materialType = materialType;
 		return former;
@@ -591,7 +590,7 @@ public final class Movable implements ILogicMovable {
 	 * 		duration the animation should last (in seconds). // TODO change to milliseconds
 	 */
 	final void playAction(EMovableAction movableAction, float duration) {
-		assert state == EMovableState.DOING_NOTHING : "can't do playAction() if state isn't DOING_NOTHING. curr state: " + state;
+		if(state != EMovableState.DOING_NOTHING) throw new AssertionError("can't do playAction() if state isn't DOING_NOTHING. curr state: " + state);
 
 		playAnimation(movableAction, (short) (duration * 1000));
 		setState(EMovableState.PLAYING_ACTION);
@@ -633,7 +632,7 @@ public final class Movable implements ILogicMovable {
 	 * 		time to sleep in milliseconds
 	 */
 	final void sleep(short sleepTime) {
-		assert state == EMovableState.DOING_NOTHING : "can't do sleep() if state isn't DOING_NOTHING. curr state: " + state;
+		if(state != EMovableState.DOING_NOTHING) throw new AssertionError("can't do sleep() if state isn't DOING_NOTHING. curr state: " + state);
 
 		playAnimation(EMovableAction.NO_ACTION, sleepTime);
 		setState(EMovableState.WAITING);
@@ -658,7 +657,7 @@ public final class Movable implements ILogicMovable {
 	 * false if it wasn't possible to get a path.
 	 */
 	final boolean goToPos(ShortPoint2D targetPos) {
-		assert state == EMovableState.DOING_NOTHING : "can't do goToPos() if state isn't DOING_NOTHING. curr state: " + state;
+		if(state != EMovableState.DOING_NOTHING) throw new AssertionError("can't do goToPos() if state isn't DOING_NOTHING. curr state: " + state);
 
 		Path path = grid.calculatePathTo(this, targetPos);
 		if (path == null) {
@@ -743,7 +742,7 @@ public final class Movable implements ILogicMovable {
 	 * @return true if a path has been found.
 	 */
 	final boolean preSearchPath(boolean dijkstra, short centerX, short centerY, short radius, ESearchType searchType) {
-		assert state == EMovableState.DOING_NOTHING : "this method can only be invoked in state DOING_NOTHING";
+		if(state != EMovableState.DOING_NOTHING) throw new AssertionError("this method can only be invoked in state DOING_NOTHING");
 
 		if (dijkstra) {
 			this.path = grid.searchDijkstra(this, centerX, centerY, radius, searchType);
@@ -755,7 +754,7 @@ public final class Movable implements ILogicMovable {
 	}
 
 	final ShortPoint2D followPresearchedPath() {
-		assert this.path != null : "path mustn't be null to be able to followPresearchedPath()!";
+		if(this.path == null) throw new AssertionError("path mustn't be null to be able to followPresearchedPath()!");
 		followPath(this.path);
 		return path.getTargetPosition();
 	}

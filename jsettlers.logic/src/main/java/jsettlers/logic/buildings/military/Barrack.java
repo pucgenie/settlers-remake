@@ -96,8 +96,7 @@ public final class Barrack extends WorkAreaBuilding implements IBarrack, IReques
 
 	@Override
 	protected int subTimerEvent() {
-		assert false : "This should never be called.";
-		return -1;
+		throw new AssertionError("This should never be called.");
 	}
 
 	@Override

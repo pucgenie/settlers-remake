@@ -232,7 +232,7 @@ public class MinHeap<T extends MinHeapable> {
 
 		// if (idx == -1)
 		// return;
-		assert idx != -1 : "remove wrong element";
+		if(idx == -1) throw new AssertionError("remove wrong element");
 		size--;
 		T last = heap.get(size);
 		heap.set(idx, last);

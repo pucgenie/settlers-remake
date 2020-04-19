@@ -48,7 +48,7 @@ public final class FreeMapArea implements IMapArea {
 	 *            the positions this map area will contain.
 	 */
 	public FreeMapArea(List<ShortPoint2D> positions) {
-		assert positions.size() > 0 : "positions must contain at least one value!!";
+		if (positions.size() <= 0) throw new AssertionError("positions must contain at least one value!!");
 
 		this.positions = positions;
 		SRectangle bounds = getBounds(positions);
@@ -75,7 +75,7 @@ public final class FreeMapArea implements IMapArea {
 	 *            minY + height -1 is the maximum y value in the list of positions.
 	 */
 	public FreeMapArea(List<ShortPoint2D> positions, int minX, int minY, int width, int height) {
-		assert positions.size() > 0 : "positions must contain at least one value!!";
+		if (positions.size() <= 0) throw new AssertionError("positions must contain at least one value!!");
 
 		this.positions = positions;
 		this.xOffset = minX;
