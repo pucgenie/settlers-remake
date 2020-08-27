@@ -16,6 +16,7 @@ package jsettlers.main;
 
 import static java8.util.stream.StreamSupport.stream;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,8 +139,9 @@ public class MultiplayerGame {
 		PlayerSetting[] playerSettings = new PlayerSetting[availablePlayers.length];
 
 		byte i = 0;
-		for (; i < playersList.getItems().size(); i++) {
-			playerSettings[i] = new PlayerSetting(i);
+		for(IMultiplayerPlayer next : playersList.getItems()) {
+			playerSettings[i] = new PlayerSetting(EPlayerType.HUMAN, next.getCivilisation(), next.getTeamId());
+			i++;
 		}
 
 		EPlayerType aiType = iAmTheHost ? EPlayerType.AI_VERY_HARD : EPlayerType.HUMAN;
@@ -209,6 +211,10 @@ public class MultiplayerGame {
 			return ENetworkMessage.UNAUTHORIZED;
 		case READY_STATE_CHANGED:
 			return ENetworkMessage.READY_STATE_CHANGED;
+		case CIVILISATION_CHANGED:
+			return ENetworkMessage.CIVILISATION_CHANGED;
+		case TEAM_CHANGED:
+			return ENetworkMessage.TEAM_CHANGED;
 		case UNKNOWN_ERROR:
 		default:
 			return ENetworkMessage.UNKNOWN_ERROR;
@@ -241,6 +247,16 @@ public class MultiplayerGame {
 			@Override
 			public void setReady(boolean ready) {
 				networkClient.setReadyState(ready);
+			}
+
+			@Override
+			public void setCivilisation(ECivilisation civilisation) {
+				networkClient.setCivilisation(civilisation.ordinal);
+			}
+
+			@Override
+			public void setTeamId(byte teamId) {
+				networkClient.setTeamId(teamId);
 			}
 
 			@Override

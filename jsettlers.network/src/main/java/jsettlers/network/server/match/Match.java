@@ -16,6 +16,7 @@ package jsettlers.network.server.match;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.UUID;
 
@@ -45,8 +46,8 @@ public class Match {
 	private final Logger logger;
 	private final Date date;
 	private final String id;
-	private final LinkedList<Player> players;
-	private final LinkedList<Player> leftPlayers;
+	private final List<Player> players;
+	private final List<Player> leftPlayers;
 	private final int maxPlayers;
 	private final MapInfoPacket map;
 	private final String name;

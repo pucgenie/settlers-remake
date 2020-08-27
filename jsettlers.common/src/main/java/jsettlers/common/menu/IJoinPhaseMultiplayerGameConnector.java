@@ -14,6 +14,7 @@
  *******************************************************************************/
 package jsettlers.common.menu;
 
+import jsettlers.common.player.ECivilisation;
 import jsettlers.common.utils.collections.ChangingList;
 
 /**
@@ -50,6 +51,18 @@ public interface IJoinPhaseMultiplayerGameConnector {
 	 * @param ready
 	 */
 	void setReady(boolean ready);
+
+	/**
+	 * Sets the civilisation of the current user.
+	 * @param civilisation
+	 */
+	void setCivilisation(ECivilisation civilisation);
+
+	/**
+	 * Sets the team of the current user.
+	 * @param teamId
+	 */
+	void setTeamId(byte teamId);
 
 	/**
 	 * Starts the game if all players are currently ready. Calls the game listener as soon as it is starting.

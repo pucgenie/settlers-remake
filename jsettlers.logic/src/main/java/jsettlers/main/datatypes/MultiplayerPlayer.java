@@ -15,6 +15,7 @@
 package jsettlers.main.datatypes;
 
 import jsettlers.common.menu.IMultiplayerPlayer;
+import jsettlers.common.player.ECivilisation;
 import jsettlers.network.common.packets.PlayerInfoPacket;
 
 /**
@@ -27,11 +28,15 @@ public class MultiplayerPlayer implements IMultiplayerPlayer {
 	private final String id;
 	private final String name;
 	private final boolean ready;
+	private final ECivilisation civilisation;
+	private final byte teamId;
 
 	public MultiplayerPlayer(PlayerInfoPacket playerInfoPacket) {
 		this.id = playerInfoPacket.getId();
 		this.name = playerInfoPacket.getName();
 		this.ready = playerInfoPacket.isReady();
+		this.civilisation = ECivilisation.VALUES[playerInfoPacket.getCivilisation()];
+		this.teamId = playerInfoPacket.getTeamId();
 	}
 
 	@Override
@@ -49,8 +54,16 @@ public class MultiplayerPlayer implements IMultiplayerPlayer {
 		return ready;
 	}
 
+	public ECivilisation getCivilisation() {
+		return civilisation;
+	}
+
+	public byte getTeamId() {
+		return teamId;
+	}
+
 	@Override
 	public String toString() {
-		return "MultiplayerPlayer [id=" + id + ", name=" + name + ", ready=" + ready + "]";
+		return "MultiplayerPlayer [id=" + id + ", name=" + name + ", ready=" + ready + ", civilisation=" + civilisation + ", teamId=" + teamId + " ]";
 	}
 }

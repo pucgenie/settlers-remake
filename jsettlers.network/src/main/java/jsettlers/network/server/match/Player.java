@@ -113,6 +113,22 @@ public class Player {
 		}
 	}
 
+	public void setCivilisation(int civilisation) throws IllegalStateException {
+		EPlayerState.assertState(state, EPlayerState.IN_MATCH);
+		if (playerInfo.getCivilisation() != civilisation) { // only update if there is a real change
+			playerInfo.setCivilisation(civilisation);
+			match.sendMatchInfoUpdate(ENetworkMessage.CIVILISATION_CHANGED, this.getPlayerInfo());
+		}
+	}
+
+	public void setTeam(byte team) throws IllegalStateException {
+		EPlayerState.assertState(state, EPlayerState.IN_MATCH);
+		if (playerInfo.getTeamId() != team) { // only update if there is a real change
+			playerInfo.setTeamId(team);
+			match.sendMatchInfoUpdate(ENetworkMessage.TEAM_CHANGED, this.getPlayerInfo());
+		}
+	}
+
 	public EPlayerState getState() {
 		return state;
 	}

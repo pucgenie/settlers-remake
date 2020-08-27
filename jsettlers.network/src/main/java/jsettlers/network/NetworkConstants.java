@@ -95,6 +95,8 @@ public final class NetworkConstants {
 		UNKNOWN_ERROR,
 		INVALID_STATE_ERROR,
 
+		CIVILISATION_CHANGED,
+		TEAM_CHANGED,
 		;
 
 		private static final ENetworkMessage[] values = ENetworkMessage.values();
@@ -144,7 +146,9 @@ public final class NetworkConstants {
 		CHAT_MESSAGE,
 		TIME_SYNC,
 
-		CHANGE_START_FINISHED;
+		CHANGE_START_FINISHED,
+		CHANGE_CIVILISATION,
+		CHANGE_TEAM;
 
 		private static final ENetworkKey[] values = ENetworkKey.values();
 		private final byte ordinal;

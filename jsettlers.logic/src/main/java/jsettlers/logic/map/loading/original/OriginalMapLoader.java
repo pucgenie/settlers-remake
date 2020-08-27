@@ -218,7 +218,7 @@ public class OriginalMapLoader extends MapLoader {
 
 	private void loadMapContent(EMapStartResources startResources, PlayerSetting[] playerSettings) throws MapLoadException {
 		try {
-			// - the map buffer of the class may is closed and need to reopen!
+			// - the map buffer of the class may be closed and need to reopen!
 			mapContent.reOpen(this.listedMap.getInputStream());
 		} catch (Exception e) {
 			throw new MapLoadException(e);

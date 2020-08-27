@@ -33,6 +33,7 @@ import jsettlers.network.common.packets.ArrayOfMatchInfosPacket;
 import jsettlers.network.common.packets.BooleanMessagePacket;
 import jsettlers.network.common.packets.ChatMessagePacket;
 import jsettlers.network.common.packets.IdPacket;
+import jsettlers.network.common.packets.IntegerMessagePacket;
 import jsettlers.network.common.packets.MapInfoPacket;
 import jsettlers.network.common.packets.MatchInfoPacket;
 import jsettlers.network.common.packets.MatchInfoUpdatePacket;
@@ -153,6 +154,18 @@ public class NetworkClient implements ITaskScheduler, INetworkConnector, INetwor
 	public void setReadyState(boolean ready) throws IllegalStateException {
 		EPlayerState.assertState(state, EPlayerState.IN_MATCH);
 		channel.sendPacketAsync(NetworkConstants.ENetworkKey.CHANGE_READY_STATE, new BooleanMessagePacket(ready));
+	}
+
+	@Override
+	public void setCivilisation(int civilisation) throws IllegalStateException {
+		EPlayerState.assertState(state, EPlayerState.IN_MATCH);
+		channel.sendPacketAsync(NetworkConstants.ENetworkKey.CHANGE_CIVILISATION, new IntegerMessagePacket(civilisation));
+	}
+
+	@Override
+	public void setTeamId(byte teamId) throws IllegalStateException {
+		EPlayerState.assertState(state, EPlayerState.IN_MATCH);
+		channel.sendPacketAsync(NetworkConstants.ENetworkKey.CHANGE_TEAM, new IntegerMessagePacket(teamId));
 	}
 
 	@Override

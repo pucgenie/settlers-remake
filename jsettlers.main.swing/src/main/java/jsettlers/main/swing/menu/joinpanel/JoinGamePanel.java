@@ -370,6 +370,8 @@ public class JoinGamePanel extends BackgroundPanel {
 				playerSlot.setPlayerName(player.getName());
 				playerSlot.setPlayerType(EPlayerType.HUMAN, false);
 				playerSlot.setReady(player.isReady());
+				playerSlot.setCivilisation(player.getCivilisation());
+				playerSlot.setTeam(player.getTeamId());
 				if (player.getId().equals(myId)) {
 					playerSlot.setReadyButtonEnabled(true);
 					playerSlot.informGameAboutReady(joinMultiPlayerMap);
@@ -425,7 +427,7 @@ public class JoinGamePanel extends BackgroundPanel {
 			}
 
 			if (playerSetting.getCivilisation() != null) {
-				playerSlot.setCivilisation(playerSetting.getCivilisation(), false);
+				playerSlot.setCivilisation(playerSetting.getCivilisation());
 			}
 
 			if (playerSetting.getPlayerType() != null) {

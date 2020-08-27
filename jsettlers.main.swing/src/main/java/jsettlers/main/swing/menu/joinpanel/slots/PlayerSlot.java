@@ -135,7 +135,13 @@ public class PlayerSlot {
 
 	private void addListener() {
 		typeComboBox.addActionListener(e -> updateAiPlayerName());
-		civilisationComboBox.addActionListener(e -> updateAiPlayerName());
+		civilisationComboBox.addActionListener(e -> {
+			updateAiPlayerName();
+
+			if(gameToBeInformedAboutReady != null) {
+				gameToBeInformedAboutReady.setCivilisation(getCivilisation());
+			}
+		});
 		slotComboBox.addActionListener(e -> {
 			if (slotListener != null) {
 				slotListener.slotHasChanged(oldSlotValue, getSlot());
@@ -146,6 +152,11 @@ public class PlayerSlot {
 			setReady(!isReady());
 			if (gameToBeInformedAboutReady != null) {
 				gameToBeInformedAboutReady.setReady(isReady());
+			}
+		});
+		teamComboBox.addActionListener(e -> {
+			if(gameToBeInformedAboutReady != null) {
+				gameToBeInformedAboutReady.setTeamId((byte)teamComboBox.getSelectedItem());
 			}
 		});
 	}
@@ -256,15 +267,13 @@ public class PlayerSlot {
 		readyButton.setEnabled(isEnabled);
 	}
 
-	public void setCivilisation(ECivilisation civilisation, boolean enabled) {
+	public void setCivilisation(ECivilisation civilisation) {
 		for (int i = 0; i < civilisationComboBox.getItemCount(); i++) {
 			if (civilisationComboBox.getItemAt(i).getCivilisation() == civilisation) {
 				civilisationComboBox.setSelectedIndex(i);
 				break;
 			}
 		}
-
-		civilisationComboBox.setEnabled(enabled);
 	}
 
 	public void setPlayerType(EPlayerType playerType, boolean enabled) {

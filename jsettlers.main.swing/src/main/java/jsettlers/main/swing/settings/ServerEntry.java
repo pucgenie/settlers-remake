@@ -57,7 +57,6 @@ public class ServerEntry implements Cloneable {
 	public ServerEntry() {
 		setType(EServerType.JSETTLERS);
 		connectionLog = new StringBuffer();
-		username = SettingsManager.getInstance().getUserName();
 	}
 
 	public String getAlias() {
@@ -95,6 +94,7 @@ public class ServerEntry implements Cloneable {
 
 		if(type == EServerType.JSETTLERS) {
 			setUUID(UUID.randomUUID());
+			//if(username == null) username = SettingsManager.getInstance().getUserName();
 		}
 	}
 
@@ -103,7 +103,7 @@ public class ServerEntry implements Cloneable {
 		this.address = address;
 	}
 
-	public void setusername(String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 

@@ -92,6 +92,10 @@ public interface INetworkClient {
 
 	void setReadyState(boolean ready) throws IllegalStateException;
 
+	void setCivilisation(int civilisation) throws IllegalStateException;
+
+	void setTeamId(byte teamId) throws IllegalStateException;
+
 	void sendChatMessage(String message) throws IllegalStateException;
 
 	void leaveMatch();

@@ -61,7 +61,6 @@ public class MatchInfoPacket extends Packet {
 		dos.writeInt(maxPlayers);
 		mapInfo.serialize(dos);
 
-		PlayerInfoPacket[] players = this.players;
 		dos.writeInt(players.length);
 		for (PlayerInfoPacket curr : players) {
 			curr.serialize(dos);

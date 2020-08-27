@@ -15,8 +15,10 @@ import jsettlers.common.utils.collections.IChangingListListener;
 import jsettlers.logic.map.loading.MapLoader;
 import jsettlers.main.android.core.AndroidPreferences;
 import jsettlers.main.android.core.GameStarter;
+import jsettlers.main.android.mainmenu.gamesetup.playeritem.Civilisation;
 import jsettlers.main.android.mainmenu.gamesetup.playeritem.PlayerSlotPresenter;
 import jsettlers.main.android.mainmenu.gamesetup.playeritem.ReadyListener;
+import jsettlers.main.android.mainmenu.gamesetup.playeritem.Team;
 
 /**
  * Created by Tom Pratt on 07/10/2017.
@@ -95,6 +97,8 @@ public class JoinMultiPlayerSetupViewModel extends MapSetupViewModel implements 
 				IMultiplayerPlayer multiplayerPlayer = players.get(i);
 				playerSlotPresenter.setName(multiplayerPlayer.getName());
 				playerSlotPresenter.setReady(multiplayerPlayer.isReady());
+				playerSlotPresenter.setCivilisation(new Civilisation(multiplayerPlayer.getCivilisation()));
+				playerSlotPresenter.setTeam(new Team(multiplayerPlayer.getTeamId()));
 				playerSlotPresenter.setShowReadyControl(true);
 
 				boolean isMe = multiplayerPlayer.getId().equals(androidPreferences.getPlayerId());

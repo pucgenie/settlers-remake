@@ -25,10 +25,12 @@ import jsettlers.network.infrastructure.channel.reject.RejectPacket;
 import jsettlers.network.server.db.IDBFacade;
 import jsettlers.network.server.exceptions.NotAllPlayersReadyException;
 import jsettlers.network.server.listeners.ChatMessageForwardingListener;
+import jsettlers.network.server.listeners.CivilisationChangePacketListener;
 import jsettlers.network.server.listeners.IdentifyUserListener;
 import jsettlers.network.server.listeners.ReadyStatePacketListener;
 import jsettlers.network.server.listeners.ServerChannelClosedListener;
 import jsettlers.network.server.listeners.StartFinishedSignalListener;
+import jsettlers.network.server.listeners.TeamChangePacketListener;
 import jsettlers.network.server.listeners.TimeSyncForwardingListener;
 import jsettlers.network.server.listeners.matches.JoinMatchListener;
 import jsettlers.network.server.listeners.matches.LeaveMatchListener;
@@ -85,6 +87,8 @@ public class ServerManager implements IServerManager {
 			channel.registerListener(new ChatMessageForwardingListener(this, player));
 			channel.registerListener(new TimeSyncForwardingListener(this, player));
 			channel.registerListener(new ReadyStatePacketListener(this, player));
+			channel.registerListener(new CivilisationChangePacketListener(this, player));
+			channel.registerListener(new TeamChangePacketListener(this, player));
 			channel.registerListener(new StartFinishedSignalListener(this, player));
 
 			return true;
@@ -179,6 +183,26 @@ public class ServerManager implements IServerManager {
 		} catch (IllegalStateException e) {
 			player.sendPacket(NetworkConstants.ENetworkKey.REJECT_PACKET,
 					new RejectPacket(NetworkConstants.ENetworkMessage.INVALID_STATE_ERROR, NetworkConstants.ENetworkKey.CHANGE_READY_STATE));
+		}
+	}
+
+	@Override
+	public void setCivilisationForPlayer(Player player, int civilisation) {
+		try {
+			player.setCivilisation(civilisation);
+		} catch (IllegalStateException e) {
+			player.sendPacket(NetworkConstants.ENetworkKey.REJECT_PACKET,
+					new RejectPacket(NetworkConstants.ENetworkMessage.INVALID_STATE_ERROR, NetworkConstants.ENetworkKey.CHANGE_CIVILISATION));
+		}
+	}
+
+	@Override
+	public void setTeamForPlayer(Player player, byte team) {
+		try {
+			player.setTeam(team);
+		} catch (IllegalStateException e) {
+			player.sendPacket(NetworkConstants.ENetworkKey.REJECT_PACKET,
+					new RejectPacket(NetworkConstants.ENetworkMessage.INVALID_STATE_ERROR, NetworkConstants.ENetworkKey.CHANGE_TEAM));
 		}
 	}
 
