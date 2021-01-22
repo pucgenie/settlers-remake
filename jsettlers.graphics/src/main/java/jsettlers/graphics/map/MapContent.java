@@ -88,6 +88,7 @@ import jsettlers.graphics.map.draw.ImageProvider;
 import jsettlers.graphics.map.draw.MapObjectDrawer;
 import jsettlers.graphics.messages.Messenger;
 import jsettlers.graphics.sound.BackgroundSound;
+import jsettlers.graphics.sound.MusicManager;
 import jsettlers.graphics.sound.SoundManager;
 
 /**
@@ -184,6 +185,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 
 	private final Messenger messenger;
 	private final SoundManager soundmanager;
+	private final MusicManager musicManager;
 	private final BackgroundSound backgroundSound;
 
 	private final ReplaceableTextDrawer textDrawer;
@@ -262,11 +264,13 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 		this.textDrawer = new ReplaceableTextDrawer();
 		this.context = new MapDrawContext(map);
 		this.soundmanager = new SoundManager(soundPlayer);
+		this.musicManager = new MusicManager(soundPlayer, localPlayer.getCivilisation());
 		this.background = new Background(context);
 
 		objectDrawer = new MapObjectDrawer(context, soundmanager, localPlayer);
 		backgroundSound = new BackgroundSound(context, soundmanager);
 		backgroundSound.start();
+		musicManager.startMusic();
 
 		if (controls == null) {
 			this.controls = new OriginalControls(this, game);
@@ -962,6 +966,19 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 			BuildingVariant buildingVariant = buildingType == null ? null : buildingType.getVariant(localPlayer.getCivilisation());
 			placementBuilding = buildingVariant == null ? null : new PlacementBuilding(buildingVariant);
 			break;
+		case MUSIC_ON_OFF:
+			if (musicManager.isRunning()) {
+				musicManager.stopMusic();
+			} else {
+				musicManager.startMusic();
+			}
+			break;
+		case MUSIC_VOLUME_UP:
+			musicManager.setMusicVolume(0.05f, true);
+			break;
+		case MUSIC_VOLUME_DOWN:
+			musicManager.setMusicVolume(-0.05f, true);
+			break;
 		default:
 			break;
 		}
@@ -1013,6 +1030,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 	}
 
 	public void stop() {
+		musicManager.stopMusic();
 		backgroundSound.stop();
 		controls.stop();
 	}
