@@ -43,11 +43,12 @@ import jsettlers.logic.constants.Constants;
 import jsettlers.logic.constants.MatchConstants;
 import jsettlers.logic.movable.civilian.BearerMovable;
 import jsettlers.logic.movable.civilian.BricklayerMovable;
-import jsettlers.logic.movable.civilian.BuildingWorkerMovable;
 import jsettlers.logic.movable.civilian.DiggerMovable;
+import jsettlers.logic.movable.civilian.SimpleBuildingWorkerMovable;
 import jsettlers.logic.movable.civilian.HealerMovable;
 import jsettlers.logic.movable.cargo.CargoShipMovable;
 import jsettlers.logic.movable.cargo.DonkeyMovable;
+import jsettlers.logic.movable.civilian.LegacyBuildingWorkerMovable;
 import jsettlers.logic.movable.interfaces.AbstractMovableGrid;
 import jsettlers.logic.movable.interfaces.IAttackableHumanMovable;
 import jsettlers.logic.movable.interfaces.IFerryMovable;
@@ -91,7 +92,7 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 	private int   animationStartTime;
 	private short animationDuration;
 
-	public ShortPoint2D oldFowPosition = null;
+	public transient ShortPoint2D oldFowPosition = null;
 	protected ShortPoint2D position;
 
 	protected Path path;
@@ -111,7 +112,7 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 
 	protected boolean playerControlled;
 
-	private Tick<? extends Movable> tick;
+	private Tick<? extends Movable> tick;//TODO fix behaviour tree serialisation
 
 	protected Movable(AbstractMovableGrid grid, EMovableType movableType, ShortPoint2D position, Player player, Movable replace, Root<? extends Movable> behaviour) {
 		this.grid = grid;
@@ -188,15 +189,31 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 	}
 
 	protected boolean aborted;
-	protected IBooleanConditionFunction<Movable> pathStep;
+	protected IBooleanConditionFunction<Movable> pathStep; //TODO remove so that tests will continue working in the future
 
 	protected void pathAborted(ShortPoint2D pathTarget) {
 		aborted = true;
 	}
 
+	protected static <T extends Movable> Node<T> setDirectionNode(IEDirectionSupplier<T> direction) {
+		return BehaviorTreeHelper.action(mov -> {mov.setDirection(direction.apply(mov));});
+	}
+
+	protected static <T extends Movable> Node<T> setMaterialNode(EMaterialType material) {
+		return BehaviorTreeHelper.action(mov -> {mov.setMaterial(material);});
+	}
+
+	protected static <T extends Movable> Node<T> hide() {
+		return BehaviorTreeHelper.action(mov -> {mov.setVisible(false);});
+	}
+
+	protected static <T extends Movable> Node<T> show() {
+		return BehaviorTreeHelper.action(mov -> {mov.setVisible(true);});
+	}
+
 	protected static <T extends Movable> Node<T> drop(IEMaterialTypeSupplier<T> materialType, IBooleanConditionFunction<T> offerMaterial) {
 		return sequence(
-				playAction(EMovableAction.BEND_DOWN, mov -> Constants.MOVABLE_BEND_DURATION),
+				playAction(EMovableAction.BEND_DOWN, Constants.MOVABLE_BEND_DURATION),
 				BehaviorTreeHelper.action(mov -> {
 					EMaterialType takeDropMaterial = materialType.apply(mov);
 
@@ -205,21 +222,21 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 					mov.setMaterial(EMaterialType.NO_MATERIAL);
 					mov.grid.dropMaterial(mov.position, takeDropMaterial, offerMaterial.test(mov), false);
 				}),
-				playAction(EMovableAction.RAISE_UP, mov -> Constants.MOVABLE_BEND_DURATION)
+				playAction(EMovableAction.RAISE_UP, Constants.MOVABLE_BEND_DURATION)
 		);
 	}
 
 	protected static <T extends Movable> Node<T> take(IEMaterialTypeSupplier<T> materialType, IBooleanConditionFunction<T> fromMap, INodeStatusActionConsumer<T> tookMaterial) {
 		return sequence(
 				condition(mov -> !fromMap.test(mov) || mov.grid.canTakeMaterial(mov.position, materialType.apply(mov))),
-				playAction(EMovableAction.BEND_DOWN, mov -> Constants.MOVABLE_BEND_DURATION),
+				playAction(EMovableAction.BEND_DOWN, Constants.MOVABLE_BEND_DURATION),
 				BehaviorTreeHelper.action(mov -> {
 					EMaterialType material = materialType.apply(mov);
 					mov.grid.takeMaterial(mov.position, material);
 					mov.setMaterial(material);
 					tookMaterial.accept(mov);
 				}),
-				playAction(EMovableAction.RAISE_UP, mov -> Constants.MOVABLE_BEND_DURATION)
+				playAction(EMovableAction.RAISE_UP, Constants.MOVABLE_BEND_DURATION)
 		);
 	}
 
@@ -245,6 +262,9 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 				waitFor(condition(mov -> ((Movable)mov).state == EMovableState.DOING_NOTHING))
 		);
 	}
+	protected static <T extends Movable> Node<T> goInDirectionWaitFree(EDirection direction, IBooleanConditionFunction<T> pathStep) {
+		return goInDirectionWaitFree(mov -> direction, pathStep);
+	}
 
 	protected static <T extends Movable> Node<T> goInDirectionWaitFree(IEDirectionSupplier<T> direction, IBooleanConditionFunction<T> pathStep) {
 		return sequence(
@@ -258,6 +278,24 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 		);
 	}
 
+	private ShortPoint2D markedTarget = null;
+
+	protected static <T extends Movable> Node<T> followPresearchedPathMarkTarget(IBooleanConditionFunction<T> pathStep) {
+		return resetAfter(mov -> {
+					Movable mmov = (Movable) mov;
+					mmov.grid.setMarked(mmov.markedTarget, false);
+					mmov.markedTarget = null;
+				},
+				sequence(
+					BehaviorTreeHelper.action(mov -> {
+						Movable mmov = (Movable) mov;
+						mmov.markedTarget = mmov.path.getTargetPosition();
+						mmov.grid.setMarked(mmov.markedTarget, true);
+					}),
+					followPresearchedPath(pathStep)
+				)
+		);
+	}
 
 	protected static <T extends Movable> Node<T> followPresearchedPath(IBooleanConditionFunction<T> pathStep) {
 		return sequence(
@@ -275,6 +313,15 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 				condition(mov -> !mov.aborted)
 
 		);
+	}
+
+	/**
+	 *
+	 * @param duration
+	 * 			duration in milliseconds
+	 */
+	protected static <T extends Movable> Node<T> playAction(EMovableAction action, short duration) {
+		return playAction(action, mov -> duration);
 	}
 
 	/**
@@ -558,13 +605,13 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 				sequence(
 					condition(mov -> mov.grid.isBlockedOrProtected(mov.position.x, mov.position.y)),
 					selector(
-						condition(mov -> mov.preSearchPath(true, mov.position.x, mov.position.y, (short) 50, ESearchType.NON_BLOCKED_OR_PROTECTED)),
 						sequence(
-							BehaviorTreeHelper.action(Movable::kill),
-							alwaysFail()
-						)
-					),
-					followPresearchedPath(mov -> true)
+							condition(mov -> mov.preSearchPath(true, mov.position.x, mov.position.y, (short) 50, ESearchType.NON_BLOCKED_OR_PROTECTED)),
+							followPresearchedPath(mov -> true)
+						),
+						// just "succeed" after dying
+						BehaviorTreeHelper.action(Movable::kill)
+					)
 				),
 				// flock to decentralize
 				sequence(
@@ -1093,23 +1140,25 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 
 			case BAKER:
 			case CHARCOAL_BURNER:
-			case FARMER:
-			case FISHERMAN:
-			case FORESTER:
 			case MELTER:
 			case MILLER:
 			case MINER:
 			case PIG_FARMER:
 			case DONKEY_FARMER:
-			case LUMBERJACK:
 			case SAWMILLER:
 			case SLAUGHTERER:
 			case SMITH:
+			case DOCKWORKER:
+				return new LegacyBuildingWorkerMovable(grid, movableType, position, player, movable);
+
+			case FISHERMAN:
 			case STONECUTTER:
 			case WATERWORKER:
+			case LUMBERJACK:
+			case FORESTER:
 			case WINEGROWER:
-			case DOCKWORKER:
-				return new BuildingWorkerMovable(grid, movableType, position, player, movable);
+			case FARMER:
+				return new SimpleBuildingWorkerMovable(grid, movableType, position, player, movable);
 
 			case HEALER:
 				return new HealerMovable(grid, position, player, movable);
