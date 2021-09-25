@@ -19,7 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import jsettlers.common.map.shapes.FreeMapArea;
 import jsettlers.common.position.ShortPoint2D;
@@ -36,12 +36,12 @@ final class FlattenedResetter implements IScheduledTimerable, Serializable {
 	private static final long serialVersionUID = -7786860099434140327L;
 	private static final int SCHEDULE_INTERVAL = 1500;
 
-	private transient LinkedList<ShortPoint2D> positions = new LinkedList<>();
+	private transient List<ShortPoint2D> positions = new ArrayList<>();
 	private final IFlattenedResettable grid;
 
 	FlattenedResetter(IFlattenedResettable grid) {
 		this.grid = grid;
-		positions = new LinkedList<>();
+		positions = new ArrayList<>();
 		RescheduleTimer.add(this, SCHEDULE_INTERVAL);
 	}
 
@@ -57,12 +57,12 @@ final class FlattenedResetter implements IScheduledTimerable, Serializable {
 	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		ois.defaultReadObject();
 
-		positions = new LinkedList<>();
+		positions = new ArrayList<>();
 
-		ShortPoint2D curr = (ShortPoint2D) ois.readObject();
+		ShortPoint2D curr = (ShortPoint2D) ois.readUnshared();
 		while (curr != null) {
 			positions.add(curr);
-			curr = (ShortPoint2D) ois.readObject();
+			curr = (ShortPoint2D) ois.readUnshared();
 		}
 	}
 
