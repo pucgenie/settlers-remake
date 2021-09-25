@@ -14,14 +14,16 @@
  *******************************************************************************/
 package go.graphics.swing.sound;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
@@ -48,7 +50,7 @@ public class SwingSoundPlayer implements SoundPlayer {
 		this.soundSettingsProvider = soundSettingsProvider;
 		device = ALC10.alcOpenDevice((String)null);
 
-		if(device == 0) {
+		if (device == 0) {
 			context = 0;
 			System.err.println("Could not initialize OpenAL: Audio is not going to work!");
 			return;
@@ -57,7 +59,7 @@ public class SwingSoundPlayer implements SoundPlayer {
 
 		context = ALC10.alcCreateContext(device, (IntBuffer)null);
 
-		if(context == 0) {
+		if (context == 0) {
 			System.err.println("Could not create an OpenAL context: Audio is not going to work!");
 			return;
 		}
@@ -66,7 +68,7 @@ public class SwingSoundPlayer implements SoundPlayer {
 		AL.createCapabilities(ALC.createCapabilities(device));
 	}
 	private int getAvailableSource() {
-		for(int source : sources) {
+		for (int source : sources) {
 			if(AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) return source;
 		}
 
@@ -89,7 +91,9 @@ public class SwingSoundPlayer implements SoundPlayer {
 
 	@Override
 	public void playSound(int soundStart, float leftVolume, float rightVolume) {
-		if(context == 0) return;
+		if (context == 0) {
+			return;
+		}
 
 		float gameVolume = soundSettingsProvider.getVolume();
 
@@ -107,14 +111,15 @@ public class SwingSoundPlayer implements SoundPlayer {
 	}
 
 	public void close() {
-		if(device != 0) {
-			if(context != 0) {
-				sources.forEach(AL10::alDeleteSources);
-				sounds.values().forEach(AL10::alDeleteBuffers);
-				ALC10.alcDestroyContext(context);
-			}
-			ALC10.alcCloseDevice(device);
+		if (device == 0) {
+	return;
 		}
+		if (context != 0) {
+			sources.forEach(AL10::alDeleteSources);
+			sounds.values().forEach(AL10::alDeleteBuffers);
+			ALC10.alcDestroyContext(context);
+		}
+		ALC10.alcCloseDevice(device);
 	}
 
 	@Override
@@ -123,14 +128,23 @@ public class SwingSoundPlayer implements SoundPlayer {
 	}
 
 	@Override
-	public SoundHandle openSound(File musicFile) {
+	public SoundHandle openSound(URL musicFile) {
 		try {
 			Clip clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(musicFile));
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(musicFile);
+			
+			if (audioInputStream.getFormat().getFrameSize() == AudioSystem.NOT_SPECIFIED
+					&& clip.getClass().getCanonicalName().equals("com.sun.media.sound.DirectAudioDevice.DirectClip")) {
+				// FIXME: pucgenie: Somehow this seems to be needed for Windows DirectSound clips.
+				// Maybe fixed 44k1 isn't needed but original MP3s most probably were created from masters with that sample rate.
+				audioInputStream = AudioSystem.getAudioInputStream(new AudioFormat(44100, 16, 2, false, false), audioInputStream);
+			}
+			
+			clip.open(audioInputStream);
 
 			return new SwingSoundHandle(clip);
 		} catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
-			throw new IllegalArgumentException(ex);
+			throw new IllegalArgumentException(musicFile.toString(), ex);
 		}
 	}
 }

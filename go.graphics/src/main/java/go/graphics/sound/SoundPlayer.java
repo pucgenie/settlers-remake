@@ -14,7 +14,7 @@
  *******************************************************************************/
 package go.graphics.sound;
 
-import java.io.File;
+import java.net.URL;
 
 public interface SoundPlayer {
 	/**
@@ -28,5 +28,5 @@ public interface SoundPlayer {
 
 	void setSoundDataRetriever(ISoundDataRetriever soundDataRetriever);
 
-	SoundHandle openSound(File musicFile);
+	SoundHandle openSound(URL musicFile);
 }
