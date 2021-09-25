@@ -20,7 +20,13 @@ import jsettlers.common.movable.EMovableType;
 import jsettlers.common.player.ECivilisation;
 import jsettlers.common.position.RelativePoint;
 
-public class BuildingVariant {
+public class BuildingVariant implements java.io.Serializable {
+
+	/**
+	 * pucgenie: Originally, it wasn't serializable. Look out for side-effects.
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public final int ordinal;
 
 	private final EBuildingType type;
