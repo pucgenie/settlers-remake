@@ -50,22 +50,32 @@ public final class MatchConstants {
 
 	private static IGameClock clock;
 	private static ExtendedRandom gameRandom;
-	private static ExtendedRandom aiRandom;
+	//private static ExtendedRandom aiRandom;
 
+	/**
+	 * Isn't thread-safe and shouldn't need to be.
+	 * @param clock
+	 * @param randomSeed
+	 */
 	public static void init(IGameClock clock, long randomSeed) {
 		clearState();
 		MatchConstants.clock = clock;
-		MatchConstants.gameRandom = new ExtendedRandom(randomSeed);
-		MatchConstants.aiRandom = new ExtendedRandom(randomSeed);
+		gameRandom = new ExtendedRandom(randomSeed);
+		//MatchConstants.aiRandom = new ExtendedRandom(randomSeed);
 	}
 
+	/**
+	 * Isn't thread-safe and shouldn't need to be.
+	 * @param clock
+	 * @param randomSeed
+	 */
 	public static void clearState() {
 		if (clock != null) {
 			clock.stopExecution();
+			clock = null;
 		}
-		clock = null;
 		gameRandom = null;
-		aiRandom = null;
+		//aiRandom = null;
 	}
 
 	public static IGameClock clock() {
@@ -77,19 +87,20 @@ public final class MatchConstants {
 	}
 
 	public static ExtendedRandom aiRandom() {
-		return aiRandom;
+		//return aiRandom;
+		return gameRandom;
 	}
 
 	public static void serialize(ObjectOutputStream oos) throws IOException {
 		oos.writeInt(clock.getTime());
-		oos.writeObject(gameRandom);
-		oos.writeObject(aiRandom);
+		oos.writeUnshared(gameRandom);
+		//oos.writeObject(aiRandom);
 	}
 
 	public static void deserialize(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		clock.setTime(ois.readInt());
-		gameRandom = (ExtendedRandom) ois.readObject();
-		aiRandom = (ExtendedRandom) ois.readObject();
+		gameRandom = (ExtendedRandom) ois.readUnshared();
+		//aiRandom = (ExtendedRandom) ois.readObject();
 	}
 
 }
