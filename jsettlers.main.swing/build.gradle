@@ -34,9 +34,21 @@ dependencies {
 	implementation project(':jsettlers.logic')
 	implementation project(':jsettlers.network')
 	implementation 'com.google.code.gson:gson:2.8.5'
+	// TODO: check license
+	//implementation group: 'com.googlecode.soundlibs', name: 'mp3spi', version: '1.9.5.4'
 
 	for (String lpglDependency : lgplDependencies) {
 		lgplDeps lpglDependency
+	}
+}
+
+application {
+	//applicationDefaultJvmArgs = ['-Dorg.lwjgl.util.Debug=true']
+}
+
+tasks.withType(JavaExec) {
+	if (System.getProperty('DEBUG', 'false') == 'true') {
+		jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
 	}
 }
 
