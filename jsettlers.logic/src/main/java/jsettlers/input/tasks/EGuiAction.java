@@ -57,7 +57,5 @@ public enum EGuiAction {
 	CAST_SPELL,
 	INCREASE_MOVABLE_RATIO,
 	DECREASE_MOVABLE_RATIO,
-	;
-
-	public static final EGuiAction[] VALUES = values();
+	
 }
