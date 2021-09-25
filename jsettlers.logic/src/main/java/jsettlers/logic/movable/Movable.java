@@ -41,14 +41,9 @@ import jsettlers.common.position.ShortPoint2D;
 import jsettlers.common.selectable.ESelectionType;
 import jsettlers.logic.constants.Constants;
 import jsettlers.logic.constants.MatchConstants;
-import jsettlers.logic.movable.civilian.BearerMovable;
-import jsettlers.logic.movable.civilian.BricklayerMovable;
-import jsettlers.logic.movable.civilian.DiggerMovable;
-import jsettlers.logic.movable.civilian.SimpleBuildingWorkerMovable;
-import jsettlers.logic.movable.civilian.HealerMovable;
+import jsettlers.logic.movable.civilian.*;
 import jsettlers.logic.movable.cargo.CargoShipMovable;
 import jsettlers.logic.movable.cargo.DonkeyMovable;
-import jsettlers.logic.movable.civilian.LegacyBuildingWorkerMovable;
 import jsettlers.logic.movable.interfaces.AbstractMovableGrid;
 import jsettlers.logic.movable.interfaces.IAttackableHumanMovable;
 import jsettlers.logic.movable.interfaces.IFerryMovable;
@@ -247,6 +242,7 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 				waitFor(condition(mov -> ((Movable)mov).state == EMovableState.DOING_NOTHING))
 		);
 	}
+
 	protected static <T extends Movable> Node<T> goInDirectionWaitFree(EDirection direction, IBooleanConditionFunction<T> pathStep) {
 		return goInDirectionWaitFree(mov -> direction, pathStep);
 	}
@@ -1156,16 +1152,12 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 			case FERRY:
 				return new FerryMovable(grid, position, player, movable);
 
+			case WHITEFLAGGED_DONKEY:
 			case DONKEY:
 				return new DonkeyMovable(grid, movableType, position, player, movable);
 
-			case BAKER:
-			case CHARCOAL_BURNER:
 			case MELTER:
 			case MINER:
-			case PIG_FARMER:
-			case DONKEY_FARMER:
-			case SAWMILLER:
 			case SMITH:
 				return new LegacyBuildingWorkerMovable(grid, movableType, position, player, movable);
 
@@ -1179,7 +1171,20 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 			case DOCKWORKER:
 			case MILLER:
 			case SLAUGHTERER:
+			case CHARCOAL_BURNER:
 				return new SimpleBuildingWorkerMovable(grid, movableType, position, player, movable);
+
+			case BAKER:
+				return new BakerMovable(grid, position, player, movable);
+
+			case SAWMILLER:
+				return new SawMillerMovable(grid, position, player, movable);
+
+			case DONKEY_FARMER:
+				return new DonkeyFarmerMovable(grid, position, player, movable);
+
+			case PIG_FARMER:
+				return new PigFarmerMovable(grid, position, player, movable);
 
 			case HEALER:
 				return new HealerMovable(grid, position, player, movable);

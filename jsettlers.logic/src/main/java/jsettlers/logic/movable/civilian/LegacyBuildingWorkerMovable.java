@@ -98,25 +98,9 @@ public class LegacyBuildingWorkerMovable extends BuildingWorkerMovable {
 							nodeToJob(dropProduced(mov -> mov.poppedMaterial))
 						),
 						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PRE_SEARCH),
-							nodeToJob(condition(mov -> mov.preSearchPathAction(true)))
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.FOLLOW_SEARCHED),
-							nodeToJob(followPresearchedPathMarkTarget(LegacyBuildingWorkerMovable::pathStep))
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.LOOK_AT_SEARCHED),
-							nodeToJob(condition(LegacyBuildingWorkerMovable::lookAtSearched))
-						),
-						sequence(
 							condition(mov -> mov.currentJob.getType() == EBuildingJobType.LOOK_AT),
 							action(mov -> {mov.setDirection(mov.currentJob.getDirection());}),
 							jobFinishedNode()
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.EXECUTE),
-							nodeToJob(condition(mov -> mov.grid.executeSearchType(mov, mov.position, mov.currentJob.getSearchType())))
 						),
 						sequence(
 							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PLAY_ACTION1),
@@ -142,46 +126,6 @@ public class LegacyBuildingWorkerMovable extends BuildingWorkerMovable {
 							nodeToJob(condition(mov -> mov.grid.canPushMaterial(mov.getCurrentJobPos())))
 						),
 						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.SMOKE_ON),
-							action(mov -> {
-								mov.grid.placeSmoke(mov.getCurrentJobPos(), true);
-								mov.building.addMapObjectCleanupPosition(mov.getCurrentJobPos(), EMapObjectType.SMOKE);
-							}),
-							jobFinishedNode()
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.SMOKE_OFF),
-							action(mov -> {
-								mov.grid.placeSmoke(mov.getCurrentJobPos(), false);
-								mov.building.addMapObjectCleanupPosition(mov.getCurrentJobPos(), EMapObjectType.SMOKE);
-							}),
-							jobFinishedNode()
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PIG_IS_ADULT),
-							nodeToJob(condition(mov -> mov.grid.isPigAdult(mov.getCurrentJobPos())))
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PIG_IS_THERE),
-							nodeToJob(condition(mov -> mov.grid.hasPigAt(mov.getCurrentJobPos())))
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PIG_PLACE),
-							action(mov -> {
-								mov.grid.placePigAt(mov.getCurrentJobPos(), true);
-								mov.building.addMapObjectCleanupPosition(mov.getCurrentJobPos(), EMapObjectType.PIG);
-							}),
-							jobFinishedNode()
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.PIG_REMOVE),
-							action(mov -> {
-								mov.grid.placePigAt(mov.getCurrentJobPos(), false);
-								mov.building.addMapObjectCleanupPosition(mov.getCurrentJobPos(), EMapObjectType.PIG);
-							}),
-							jobFinishedNode()
-						),
-						sequence(
 							condition(mov -> mov.currentJob.getType() == EBuildingJobType.POP_TOOL),
 							nodeToJob(condition(LegacyBuildingWorkerMovable::popToolRequestAction))
 						),
@@ -192,17 +136,6 @@ public class LegacyBuildingWorkerMovable extends BuildingWorkerMovable {
 									mov.poppedMaterial = mov.building.getMaterialProduction().getWeaponToProduce();
 									return mov.poppedMaterial != null;
 								})
-							)
-						),
-						sequence(
-							condition(mov -> mov.currentJob.getType() == EBuildingJobType.GROW_DONKEY),
-							nodeToJob(
-								sequence(
-									condition(mov -> mov.grid.feedDonkeyAt(mov.getCurrentJobPos())),
-									action(mov -> {
-										mov.building.addMapObjectCleanupPosition(mov.getCurrentJobPos(), EMapObjectType.DONKEY);
-									})
-								)
 							)
 						),
 						// unknown job type
