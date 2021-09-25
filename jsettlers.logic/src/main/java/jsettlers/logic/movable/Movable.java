@@ -64,6 +64,7 @@ import jsettlers.logic.movable.specialist.GeologistMovable;
 import jsettlers.logic.movable.specialist.PioneerMovable;
 import jsettlers.logic.movable.specialist.ThiefMovable;
 import jsettlers.logic.player.Player;
+import jsettlers.network.client.interfaces.IGameClock;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -930,7 +931,11 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 
 	@Override
 	public final float getMoveProgress() {
-		return ((float) (MatchConstants.clock().getTime() - animationStartTime)) / animationDuration;
+		IGameClock clock = MatchConstants.clock();
+		if (clock == null) {
+			throw new IllegalStateException("clock vanished");
+		}
+		return ((float) (clock.getTime() - animationStartTime)) / animationDuration;
 	}
 
 	@Override
