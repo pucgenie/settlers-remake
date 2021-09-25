@@ -23,7 +23,7 @@ import jsettlers.common.position.RelativePoint;
  *
  * @author Andreas Eberle
  */
-public final class BuildingAreaBitSet {
+public final class BuildingAreaBitSet implements java.io.Serializable {
 	/**
 	 * The bit set for the area. It has a size of width*height. For each relative (x,y) point the bit
 	 * x + width * y is set if that position is contained in this set.
