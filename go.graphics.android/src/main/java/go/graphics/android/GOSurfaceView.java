@@ -24,7 +24,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 import java.util.Set;
-import java.util.function.Supplier;
+import java8.util.function.Supplier;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
