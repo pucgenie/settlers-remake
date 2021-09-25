@@ -53,7 +53,7 @@ public class BuildingVariant implements java.io.Serializable {
 
 	private final RelativePoint flag;
 
-	private final RelativeBricklayer[] bricklayers;
+	private final RelativeDirectionPoint[] bricklayers;
 
 	private final byte numberOfConstructionMaterials;
 
@@ -77,7 +77,19 @@ public class BuildingVariant implements java.io.Serializable {
 
 	private final BuildingAreaBitSet buildingAreaBitSet;
 
+	private final RelativePoint smokePosition;
+
 	private final RelativePoint healSpot;
+
+	private final RelativePoint pigFeedPosition;
+
+	private final RelativeDirectionPoint[] donkeyFeedPosition;
+
+	private final RelativeDirectionPoint sawmillerWorkPosition;
+
+	private final RelativeDirectionPoint ovenPosition;
+
+	private final RelativePoint[] animalPositions;
 
 	/**
 	 * Constructs an enum object.
@@ -113,7 +125,19 @@ public class BuildingVariant implements java.io.Serializable {
 		groundTypes = EnumSet.copyOf(file.getGroundtypes());
 		viewDistance = file.getViewdistance();
 
+		smokePosition = file.getSmokePosition();
+
 		healSpot = file.getHealSpot();
+
+		pigFeedPosition = file.getPigFeedPosition();
+
+		donkeyFeedPosition = file.getDonkeyFeedPositions();
+
+		sawmillerWorkPosition = file.getSawmillerWorkPosition();
+
+		ovenPosition = file.getOvenPosition();
+
+		animalPositions = file.getAnimalPositions();
 
 		this.numberOfConstructionMaterials = calculateNumberOfConstructionMaterials();
 
@@ -277,9 +301,9 @@ public class BuildingVariant implements java.io.Serializable {
 	 * Gets the positions where the bricklayers should stand to build the house.
 	 *
 	 * @return The positions.
-	 * @see RelativeBricklayer
+	 * @see RelativeDirectionPoint
 	 */
-	public final RelativeBricklayer[] getBricklayers() {
+	public final RelativeDirectionPoint[] getBricklayers() {
 		return bricklayers;
 	}
 
@@ -409,6 +433,10 @@ public class BuildingVariant implements java.io.Serializable {
 		return !mine;
 	}
 
+	public RelativePoint getSmokePosition() {
+		return smokePosition;
+	}
+
 	/**
 	 * Returns the position a movable should be healed at.<br>
 	 * Only usable for hospitals.
@@ -417,6 +445,26 @@ public class BuildingVariant implements java.io.Serializable {
 	 */
 	public RelativePoint getHealSpot() {
 		return healSpot;
+	}
+
+	public RelativePoint getPigFeedPosition() {
+		return pigFeedPosition;
+	}
+
+	public RelativeDirectionPoint[] getDonkeyFeedPosition() {
+		return donkeyFeedPosition;
+	}
+
+	public RelativeDirectionPoint getSawmillerWorkPosition() {
+		return sawmillerWorkPosition;
+	}
+
+	public RelativeDirectionPoint getOvenPosition() {
+		return ovenPosition;
+	}
+
+	public RelativePoint[] getAnimalPositions() {
+		return animalPositions;
 	}
 
 	public Set<ELandscapeType> getRequiredGroundTypeAt(int relativeX, int relativeY) {

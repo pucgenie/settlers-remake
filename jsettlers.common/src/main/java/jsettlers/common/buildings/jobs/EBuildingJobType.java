@@ -104,31 +104,6 @@ public enum EBuildingJobType {
 	DROP,
 
 	/**
-	 * Searches a given search type. The search center is given by the working center of the building.
-	 * <p>
-	 * Parameters: <br>
-	 * search (type to be searched @see {@link ESearchType}), <br>
-	 * dx, dy (position the movable will be showed later with SHOW)
-	 * <p>
-	 * This job always fails if the working radius is 0.
-	 * <p>
-	 * Success: A path to the searched thing has been found.
-	 * <p>
-	 * Fail: If the searched thing was not found.
-	 * <p>
-	 * XXX: what if an error occurs during walking there? (e.g. land ownership changed, object removed, ...)
-	 *
-	 * @see ESearchType
-	 * @see jsettlers.common.buildings.BuildingVariant#getWorkRadius()
-	 */
-	PRE_SEARCH,
-
-	/**
-	 * Follows the pre-calculated path that has been searched with {@link #PRE_SEARCH}
-	 */
-	FOLLOW_SEARCHED,
-
-	/**
 	 * Goes to the position relative to the building.
 	 * <p>
 	 * Success: The settler is at the position
@@ -170,17 +145,6 @@ public enum EBuildingJobType {
 	PLAY_ACTION3,
 
 	/**
-	 * executes a command specified by a search option
-	 * <p>
-	 * Parameters: type ({@link jsettlers.common.material.ESearchType})
-	 * <p>
-	 * Success: the given search type has been executed
-	 * <p>
-	 * Fail: the given search type couldn't be executed
-	 */
-	EXECUTE,
-
-	/**
 	 * Tests whether there is a material at the given position.
 	 * <p>
 	 * Parameters: dx, dy, material
@@ -203,11 +167,6 @@ public enum EBuildingJobType {
 	NOT_FULL,
 
 	/**
-	 * Looks at the water/river that has been searched.
-	 */
-	LOOK_AT_SEARCHED,
-
-	/**
 	 * If the settler should be productive, this method succeeds, it fails otherwise.
 	 */
 	TRY_TAKING_RESOURCE,
@@ -216,40 +175,6 @@ public enum EBuildingJobType {
 	 * Used for mines to check if they have food to use. Supplies parameter foodOrder.
 	 */
 	TRY_TAKING_FOOD,
-
-	/**
-	 * Puts a smoke thing at a given position.
-	 * <p>
-	 * Parameters: The position where smoke should be.
-	 */
-	SMOKE_ON,
-
-	/**
-	 * Removes the smoke.
-	 * <p>
-	 * Parameters: The position where smoke was.
-	 */
-	SMOKE_OFF,
-
-	/**
-	 * Places a pig at (dx, dy)
-	 */
-	PIG_PLACE,
-
-	/**
-	 * Removes a pig at (dx, dy)
-	 */
-	PIG_REMOVE,
-
-	/**
-	 * Succeeds only if there is an adult pig at (dx, dy)
-	 */
-	PIG_IS_ADULT,
-
-	/**
-	 * Succeeds if there is a pig at (dx, dy)
-	 */
-	PIG_IS_THERE,
 
 	/**
 	 * Pops a tool from the list of tools that should be produced.
@@ -269,10 +194,4 @@ public enum EBuildingJobType {
 	 * Drops a tool/weapon that was requested with {@link #POP_TOOL} or {@link #POP_WEAPON}
 	 */
 	DROP_POPPED,
-
-	/**
-	 * Let a donkey at the given position grow. This fails if the donkey cannot grow yet. A donkey can grow at a specific interval. After several grows, it will be converted to a movable. If there is
-	 * no donkey yet, one will appear.
-	 */
-	GROW_DONKEY,
 }

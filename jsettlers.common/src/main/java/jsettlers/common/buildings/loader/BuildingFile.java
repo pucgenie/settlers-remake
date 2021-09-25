@@ -30,7 +30,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import jsettlers.common.buildings.EBuildingType;
 import jsettlers.common.buildings.OccupierPlace;
-import jsettlers.common.buildings.RelativeBricklayer;
+import jsettlers.common.buildings.RelativeDirectionPoint;
 import jsettlers.common.buildings.jobs.IBuildingJob;
 import jsettlers.common.buildings.stacks.ConstructionStack;
 import jsettlers.common.buildings.stacks.RelativeStack;
@@ -72,6 +72,12 @@ public class BuildingFile implements BuildingJobDataProvider {
 	private static final String TAG_BRICKLAYER = "bricklayer";
 	private static final String ATTR_DIRECTION = "direction";
 	private static final String TAG_BUILDMARK = "buildmark";
+	private static final String TAG_PIG_FEED_POSITION = "pigFeedPosition";
+	private static final String TAG_DONKEY_FEED_POSITION = "donkeyFeedPosition";
+	private static final String TAG_SAWMILLER_WORK_POSITION = "sawmillerWorkPosition";
+	private static final String TAG_OVEN_POSITION = "ovenPosition";
+	private static final String TAG_ANIMAL_POSITION = "animalPosition";
+	private static final String TAG_SMOKE_POSITION = "smokePosition";
 	private static final String TAG_HEALSPOT = "healspot";
 	private static final String TAG_IMAGE = "image";
 	private static final String TAG_GROUNDTYE = "ground";
@@ -85,7 +91,14 @@ public class BuildingFile implements BuildingJobDataProvider {
 	private String startJobName = "";
 	private RelativePoint door = new RelativePoint(0, 0);
 	private IBuildingJob startJob = null;
+	private RelativePoint smokePosition = new RelativePoint(0, 0);
 	private RelativePoint healSpot = new RelativePoint(0, 0);
+	private RelativePoint pigFeedPosition = new RelativePoint(0, 0);
+	private ArrayList<RelativePoint> animalPositions = new ArrayList<>();
+
+	private ArrayList<RelativeDirectionPoint> donkeyFeedPositions = new ArrayList<>();
+	private RelativeDirectionPoint sawmillerWorkPosition = new RelativeDirectionPoint(0, 0, EDirection.NORTH_EAST);
+	private RelativeDirectionPoint ovenPosition = new RelativeDirectionPoint(0, 0, EDirection.NORTH_EAST);
 
 	private EMovableType workerType;
 
@@ -93,7 +106,7 @@ public class BuildingFile implements BuildingJobDataProvider {
 	private ArrayList<RelativeStack> requestStacks = new ArrayList<>();
 	private ArrayList<RelativeStack> offerStacks = new ArrayList<>();
 
-	private ArrayList<RelativeBricklayer> bricklayers = new ArrayList<>();
+	private List<RelativeDirectionPoint> bricklayers = new ArrayList<>();
 
 	private int workradius;
 	private boolean mine;
@@ -164,11 +177,23 @@ public class BuildingFile implements BuildingJobDataProvider {
 			} else if (TAG_OFFER_STACK.equals(tagName)) {
 				readAndAddRelativeStack(attributes, offerStacks);
 			} else if (TAG_BRICKLAYER.equals(tagName)) {
-				readRelativeBricklayer(attributes);
+				bricklayers.add(readRelativeDirectionPoint(attributes));
 			} else if (TAG_IMAGE.equals(tagName)) {
 				readImageLink(attributes);
 			} else if (TAG_BUILDMARK.equals(tagName)) {
 				buildmarks.add(readRelativeTile(attributes));
+			} else if(TAG_PIG_FEED_POSITION.equals(tagName)) {
+				pigFeedPosition = readRelativeTile(attributes);
+			} else if(TAG_DONKEY_FEED_POSITION.equals(tagName)) {
+				donkeyFeedPositions.add(readRelativeDirectionPoint(attributes));
+			} else if(TAG_SAWMILLER_WORK_POSITION.equals(tagName)) {
+				sawmillerWorkPosition = readRelativeDirectionPoint(attributes);
+			} else if(TAG_OVEN_POSITION.equals(tagName)) {
+				ovenPosition = readRelativeDirectionPoint(attributes);
+			} else if(TAG_ANIMAL_POSITION.equals(tagName)) {
+				animalPositions.add(readRelativeTile(attributes));
+			} else if(TAG_SMOKE_POSITION.equals(tagName)) {
+				smokePosition = readRelativeTile(attributes);
 			} else if(TAG_HEALSPOT.equals(tagName)) {
 				healSpot = readRelativeTile(attributes);
 			} else if (TAG_GROUNDTYE.equals(tagName)) {
@@ -255,19 +280,20 @@ public class BuildingFile implements BuildingJobDataProvider {
 		return new OriginalImageLink(type, file, sequence, image);
 	}
 
-	private void readRelativeBricklayer(Attributes attributes) {
+	private RelativeDirectionPoint readRelativeDirectionPoint(Attributes attributes) {
 		try {
 			int dx = Integer.parseInt(attributes.getValue(ATTR_DX));
 			int dy = Integer.parseInt(attributes.getValue(ATTR_DY));
 			EDirection direction = EDirection.valueOf(attributes.getValue(ATTR_DIRECTION));
 
-			bricklayers.add(new RelativeBricklayer(dx, dy, direction));
+			return new RelativeDirectionPoint(dx, dy, direction);
 
 		} catch (NumberFormatException e) {
 			System.err.println("Warning: illegal number for stack attribute, in definiton for " + buildingName);
 		} catch (IllegalArgumentException e) {
 			System.err.println("Illegal direction name in " + buildingName);
 		}
+		return new RelativeDirectionPoint(0, 0, EDirection.NORTH_EAST);
 	}
 
 	private RelativePoint readRelativeTile(Attributes attributes) {
@@ -395,8 +421,8 @@ public class BuildingFile implements BuildingJobDataProvider {
 		return offerStacks.toArray(new RelativeStack[offerStacks.size()]);
 	}
 
-	public RelativeBricklayer[] getBricklayers() {
-		return bricklayers.toArray(new RelativeBricklayer[bricklayers.size()]);
+	public RelativeDirectionPoint[] getBricklayers() {
+		return bricklayers.toArray(new RelativeDirectionPoint[bricklayers.size()]);
 	}
 
 	public short getWorkradius() {
@@ -431,8 +457,32 @@ public class BuildingFile implements BuildingJobDataProvider {
 		return buildmarks.toArray(new RelativePoint[buildmarks.size()]);
 	}
 
+	public RelativePoint getSmokePosition() {
+		return smokePosition;
+	}
+
 	public RelativePoint getHealSpot() {
 		return healSpot;
+	}
+
+	public RelativePoint getPigFeedPosition() {
+		return pigFeedPosition;
+	}
+
+	public RelativeDirectionPoint[] getDonkeyFeedPositions() {
+		return donkeyFeedPositions.toArray(new RelativeDirectionPoint[0]);
+	}
+
+	public RelativeDirectionPoint getSawmillerWorkPosition() {
+		return sawmillerWorkPosition;
+	}
+
+	public RelativeDirectionPoint getOvenPosition() {
+		return ovenPosition;
+	}
+
+	public RelativePoint[] getAnimalPositions() {
+		return animalPositions.toArray(new RelativePoint[0]);
 	}
 
 	public List<ELandscapeType> getGroundtypes() {
