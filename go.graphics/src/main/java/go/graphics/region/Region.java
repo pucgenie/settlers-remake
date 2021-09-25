@@ -16,7 +16,9 @@ package go.graphics.region;
 
 import static java8.util.stream.StreamSupport.stream;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import go.graphics.GLDrawContext;
 import go.graphics.RedrawListener;
@@ -54,8 +56,11 @@ public class Region implements RedrawListener {
 	 */
 	private static final int DEFAULT_WIDTH = 20;
 
-	private final LinkedList<RedrawListener> redrawListeners = new LinkedList<>();
-	private final LinkedList<GOEventHandlerProvider> eventHandlers = new LinkedList<>();
+	/**
+	 * As there are mo remove() calls, ArrayList is more space efficient and doesn't hurt performance.
+	 */
+	private final List<RedrawListener> redrawListeners = new ArrayList<>();
+	private final List<GOEventHandlerProvider> eventHandlers = new ArrayList<>();
 
 	private final int position;
 	private int size;
@@ -181,7 +186,12 @@ public class Region implements RedrawListener {
 			if (content != null) {
 				content.handleEvent(event);
 			}
-			stream(eventHandlers).forEach(eventHandler -> eventHandler.handleEvent(event));
+			Stream<GOEventHandlerProvider> toHandle = stream(eventHandlers);
+			// pucgenie: I'm going to regret this branch.
+			if (eventHandlers.size() >= 4) {
+				toHandle = toHandle.parallel();
+			}
+			toHandle.forEach(eventHandler -> eventHandler.handleEvent(event));
 		}
 	}
 

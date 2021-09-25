@@ -20,6 +20,10 @@ import go.graphics.EPrimitiveType;
 import java8.util.Optional;
 
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java8.util.function.BiFunction;
+
 import go.graphics.GLDrawContext;
 import go.graphics.UIPoint;
 import go.graphics.UnifiedDrawHandle;
@@ -521,6 +525,8 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 		float y = windowHeight - 3 * drawer.getHeight(string);
 		drawer.drawString(x, y, string);
 	}
+	
+	private final ExecutorService multiworker = Executors.newFixedThreadPool(2);
 
 	/**
 	 * Draws the main content (buildings, settlers, ...), assuming the context is set up.
@@ -529,6 +535,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 		MapRectangle area = this.context.getConverter().getMapForScreen(screen);
 
 		double bottomDrawY = screen.getMinY() - OVERDRAW_BOTTOM_PX;
+		final BiFunction<Integer, Integer, Integer> fromHeightGrid = heightGrid == null ? this.context::getHeight : (x, y) -> (int) heightGrid[x][y];
 
 		boolean linePartiallyVisible = true;
 		for(int line = 0; line < area.getHeight() + 50 && linePartiallyVisible; line++) {
@@ -546,7 +553,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 			for(int x = startX; x <= endX; x++) {
 				drawTile(x, y);
 				if(!linePartiallyVisible) {
-					double drawSpaceY = this.context.getConverter().getViewY(x, y, heightGrid == null ? this.context.getHeight(x, y) : heightGrid[x][y]);
+					double drawSpaceY = this.context.getConverter().getViewY(x, y, fromHeightGrid.apply(x, y));
 					if (drawSpaceY > bottomDrawY) {
 						linePartiallyVisible = true;
 					}
@@ -743,7 +750,8 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 			return new Action(EActionType.TOGGLE_ORIGINAL_GRAPHICS);
 		} else if ("q".equalsIgnoreCase(keyCode)) {
 			// TODO: Only show the exit menu.
-			return new Action(EActionType.EXIT);
+			//return new Action(EActionType.EXIT);
+			return null;
 		} else if ("w".equalsIgnoreCase(keyCode)) {
 			return new Action(EActionType.TOGGLE_FOG_OF_WAR);
 		} else if ("z".equalsIgnoreCase(keyCode)) {
