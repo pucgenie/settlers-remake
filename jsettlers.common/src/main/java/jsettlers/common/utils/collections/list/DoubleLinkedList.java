@@ -135,7 +135,7 @@ public final class DoubleLinkedList<T extends DoubleLinkedListItem<T>> implement
 
 		T curr = head.next;
 		for (int i = 0; i < size; i++) {
-			oos.writeObject(curr);
+			oos.writeUnshared(curr);
 			curr = curr.next;
 		}
 	}
@@ -147,7 +147,7 @@ public final class DoubleLinkedList<T extends DoubleLinkedListItem<T>> implement
 		int size = ois.readInt();
 
 		for (int i = 0; i < size; i++) {
-			pushEnd((T) ois.readObject());
+			pushEnd((T) ois.readUnshared());
 		}
 	}
 
