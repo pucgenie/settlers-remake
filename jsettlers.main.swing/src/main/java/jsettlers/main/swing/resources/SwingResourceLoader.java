@@ -56,7 +56,7 @@ public class SwingResourceLoader {
 		// setup image and sound provider
 		ImageProvider.setLookupPath(settlersFolders.gfxFolder, settlersVersionId);
 		SoundManager.setLookupPath(settlersFolders.sndFolder);
-		MusicManager.setLookupPath(settlersFolders.musicFolder);
+		MusicManager.setLookupPath(settlersFolders.musicFolder.toPath());
 
 		// Setup map load paths
 		setupMapListFactory(SettingsManager.getInstance().getAdditionalMapsDirectory(), settlersFolders.mapsFolder);
