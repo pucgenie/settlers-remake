@@ -95,7 +95,7 @@ public class GameSerializer {
 				MarketBuilding.writeStaticState(oos);
 				HarborBuilding.writeStaticState(oos);
 				MovableManager.writeStaticState(oos);
-				oos.writeObject(grid);
+				oos.writeUnshared(grid);
 			} catch (Throwable t) {
 				t.printStackTrace();
 				this.exception = t;
@@ -103,6 +103,10 @@ public class GameSerializer {
 		}
 	}
 
+	/**
+	 * TODO: pucgenie:
+	 *
+	 */
 	private static final class LoadRunnable implements Runnable {
 		private final ObjectInputStream ois;
 		MainGrid  grid      = null;
@@ -119,7 +123,7 @@ public class GameSerializer {
 				MarketBuilding.readStaticState(ois);
 				HarborBuilding.readStaticState(ois);
 				MovableManager.readStaticState(ois);
-				grid = (MainGrid) ois.readObject();
+				grid = (MainGrid) ois.readUnshared();
 			} catch (Throwable t) {
 				t.printStackTrace();
 				this.exception = t;
