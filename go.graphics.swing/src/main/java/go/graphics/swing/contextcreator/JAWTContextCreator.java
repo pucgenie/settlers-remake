@@ -24,6 +24,8 @@ import org.lwjgl.system.jawt.JAWTX11DrawingSurfaceInfo;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import go.graphics.swing.ContextContainer;
 import go.graphics.swing.event.swingInterpreter.GOSwingEventConverter;
@@ -115,8 +117,9 @@ public abstract class JAWTContextCreator extends ContextCreator {
 						}
 					}
 				} catch(ContextException ignored) {
+					Logger.getLogger(JAWTContextCreator.class.getCanonicalName()).log(Level.FINEST, ignored.getMessage(), ignored);
 				} catch (Throwable thrown) {
-					thrown.printStackTrace();
+					Logger.getLogger(JAWTContextCreator.class.getCanonicalName()).log(Level.SEVERE, thrown.getMessage(), thrown);
 				}
 
 				if (fpsLimit == 0) repaint();
