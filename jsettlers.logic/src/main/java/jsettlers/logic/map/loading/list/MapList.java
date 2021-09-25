@@ -224,7 +224,7 @@ public class MapList implements IMapListerCallable {
 
 		ObjectOutputStream oos = new ObjectOutputStream(outStream);
 		MatchConstants.serialize(oos);
-		oos.writeObject(playerStates);
+		oos.writeUnshared(playerStates);
 		GameSerializer gameSerializer = new GameSerializer();
 		gameSerializer.save(grid, oos);
 		RescheduleTimer.saveTo(oos);
