@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ArrayList;
 
 import jsettlers.common.map.shapes.FreeMapArea;
@@ -48,6 +49,7 @@ final class FlattenedResetter implements IScheduledTimerable, Serializable {
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		oos.defaultWriteObject();
 
+		// pucgenie: I would have just coded the length in or did writeUnshared(positions)
 		for (ShortPoint2D curr : positions) {
 			oos.writeObject(curr);
 		}
@@ -59,10 +61,10 @@ final class FlattenedResetter implements IScheduledTimerable, Serializable {
 
 		positions = new ArrayList<>();
 
-		ShortPoint2D curr = (ShortPoint2D) ois.readUnshared();
+		ShortPoint2D curr = (ShortPoint2D) ois.readObject();
 		while (curr != null) {
 			positions.add(curr);
-			curr = (ShortPoint2D) ois.readUnshared();
+			curr = (ShortPoint2D) ois.readObject();
 		}
 	}
 

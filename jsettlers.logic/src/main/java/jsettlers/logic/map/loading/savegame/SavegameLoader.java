@@ -45,7 +45,7 @@ public class SavegameLoader extends RemakeMapLoader {
 	public MainGridWithUiSettings loadMainGrid(PlayerSetting[] playerSettings, EMapStartResources startResources) throws MapLoadException {
 		try (ObjectInputStream ois = new ObjectInputStream(super.getMapDataStream())) {
 			MatchConstants.deserialize(ois);
-			PlayerState[] playerStates = (PlayerState[]) ois.readObject();
+			PlayerState[] playerStates = (PlayerState[]) ois.readUnshared();
 			GameSerializer gameSerializer = new GameSerializer();
 			MainGrid mainGrid = gameSerializer.load(ois);
 			mainGrid.initWithPlayerSettings(playerSettings);

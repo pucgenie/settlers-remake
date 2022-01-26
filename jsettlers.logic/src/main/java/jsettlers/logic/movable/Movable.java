@@ -167,6 +167,7 @@ public abstract class Movable implements ILogicMovable, FoWTask {
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		oos.defaultWriteObject();
 
+		// pucgenie: May be shared.
 		oos.writeObject(movableType);
 		tick.serialize(oos);
 	}

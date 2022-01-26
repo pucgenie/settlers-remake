@@ -77,9 +77,9 @@ public final class MapObjectsManager implements IScheduledTimerable, Serializabl
 		RescheduleTimer.add(this, 100);
 	}
 
-	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
-		ois.defaultReadObject();
-	}
+//	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+//		ois.defaultReadObject();
+//	}
 
 	@Override
 	public int timerEvent() {

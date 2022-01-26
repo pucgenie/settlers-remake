@@ -15,6 +15,11 @@ import jsettlers.testutils.TestUtils;
  */
 public class ArrayListMapTest {
 
+	/**
+	 * pucgenie: Uses writeObject instead of writeUnshared for full testing.
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Test
 	public void testSerializationAndDeserialization() throws IOException, ClassNotFoundException {
 		ArrayListMap<String, String> map = new ArrayListMap<>();

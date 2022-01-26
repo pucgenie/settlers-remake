@@ -14,7 +14,7 @@ public class Tick<T> {
 	public final T       target;
 
 	private final Set<Node<T>> openNodes = new HashSet<>();
-	private final Map<Integer, Object> properties = new TreeMap<>();
+	private final Map<Integer, ?> properties = new TreeMap<>();
 
 	public Tick(T target, Root<T> root) {
 		this.root = root;
@@ -53,7 +53,7 @@ public class Tick<T> {
 	}
 
 	public void serialize(ObjectOutputStream oos) throws IOException {
-		oos.writeObject(properties);
+		oos.writeUnshared(properties);
 
 		oos.writeInt(openNodes.size());
 
@@ -66,7 +66,7 @@ public class Tick<T> {
 			throws IOException, ClassNotFoundException {
 		Tick<T> out = new Tick<>(target, root);
 
-		out.properties.putAll((Map<Integer, Object>) ois.readObject());
+		out.properties.putAll((Map<Integer, ?>) ois.readUnshared());
 		int openNodeCount = ois.readInt();
 		for(int i = 0; i < openNodeCount; i++) {
 			Node<T> openNode = root.findNode(ois.readInt());

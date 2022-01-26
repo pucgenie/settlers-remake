@@ -47,11 +47,11 @@ public class HarborBuilding extends TradingBuilding implements IDockBuilding {
 
 	@SuppressWarnings("unchecked")
 	public static void readStaticState(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		ALL_HARBORS.addAll((Collection<? extends HarborBuilding>) ois.readObject());
+		ALL_HARBORS.addAll((Collection<? extends HarborBuilding>) ois.readUnshared());
 	}
 
 	public static void writeStaticState(ObjectOutputStream oos) throws IOException {
-		oos.writeObject(ALL_HARBORS);
+		oos.writeUnshared(ALL_HARBORS);
 	}
 
 	private DockPosition dockPosition = null;

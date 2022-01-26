@@ -87,14 +87,15 @@ public final class MatchConstants {
 
 	public static void serialize(ObjectOutputStream oos) throws IOException {
 		oos.writeInt(clock.getTime());
-		oos.writeObject(gameRandom);
-		oos.writeObject(aiRandom);
+		// pucgenie: unshared doesn't really make a difference here
+		oos.writeUnshared(gameRandom);
+		oos.writeUnshared(aiRandom);
 	}
 
 	public static void deserialize(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		clock.setTime(ois.readInt());
-		gameRandom = (ExtendedRandom) ois.readObject();
-		aiRandom = (ExtendedRandom) ois.readObject();
+		gameRandom = (ExtendedRandom) ois.readUnshared();
+		aiRandom = (ExtendedRandom) ois.readUnshared();
 	}
 
 }

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.System.LoggerFinder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,16 +47,13 @@ public final class RescheduleTimer implements INetworkTimerable, Serializable {
 		}
 	}
 
-	public static synchronized void stopAndClear() {
+	public static synchronized void stopAndClear() throws InterruptedException {
 		if (uniIns != null) {
 			if (MatchConstants.clock() != null) {
 				MatchConstants.clock().remove(uniIns);
 			}
 			uniIns = null;
-			try {
-				Thread.sleep(100L); // stopping takes some time
-			} catch (InterruptedException e) {
-			}
+			Thread.sleep(100L); // stopping takes some time
 		}
 	}
 
@@ -120,14 +118,14 @@ public final class RescheduleTimer implements INetworkTimerable, Serializable {
 	public static void loadFrom(ObjectInputStream ois) throws MapLoadException {
 		try {
 			stopAndClear();
-			uniIns = (RescheduleTimer) ois.readObject();
+			uniIns = (RescheduleTimer) ois.readUnshared();
 		} catch (Throwable t) {
 			throw new MapLoadException(t);
 		}
 	}
 
 	public static void saveTo(ObjectOutputStream oos) throws IOException {
-		oos.writeObject(uniIns);
+		oos.writeUnshared(uniIns);
 		oos.flush();
 	}
 

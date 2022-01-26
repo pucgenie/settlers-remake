@@ -70,11 +70,11 @@ public final class ObjectsGrid implements Serializable {
 				oos.writeInt(idx);
 				while (currObject != null) {
 					if (currObject.getObjectType().persistent) {
-						oos.writeObject(currObject);
+						oos.writeUnshared(currObject);
 					}
 					currObject = currObject.getNextObject();
 				}
-				oos.writeObject(null);
+				oos.writeUnshared(null);
 			}
 		}
 		oos.writeInt(-1); // this is used to detect the end
@@ -90,11 +90,11 @@ public final class ObjectsGrid implements Serializable {
 
 		int index = ois.readInt();
 		while (index >= 0) {
-			AbstractHexMapObject currObject = (AbstractHexMapObject) ois.readObject();
+			AbstractHexMapObject currObject = (AbstractHexMapObject) ois.readUnshared();
 			objectsGrid[index] = currObject;
 
 			while (currObject != null) {
-				AbstractHexMapObject newObject = (AbstractHexMapObject) ois.readObject();
+				AbstractHexMapObject newObject = (AbstractHexMapObject) ois.readUnshared();
 				currObject.addMapObject(newObject);
 				currObject = newObject;
 			}

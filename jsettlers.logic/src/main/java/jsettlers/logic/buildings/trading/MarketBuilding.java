@@ -45,11 +45,11 @@ public class MarketBuilding extends TradingBuilding {
 
 	@SuppressWarnings("unchecked")
 	public static void readStaticState(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		ALL_MARKETS.addAll((Collection<? extends MarketBuilding>) ois.readObject());
+		ALL_MARKETS.addAll((Collection<? extends MarketBuilding>) ois.readUnshared());
 	}
 
 	public static void writeStaticState(ObjectOutputStream oos) throws IOException {
-		oos.writeObject(ALL_MARKETS);
+		oos.writeUnshared(ALL_MARKETS);
 	}
 
 	public MarketBuilding(EBuildingType type, Player player, ShortPoint2D position, IBuildingsGrid buildingsGrid) {

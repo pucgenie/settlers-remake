@@ -157,11 +157,11 @@ public abstract class Building extends AbstractHexMapObject implements IConstruc
 	@SuppressWarnings("unchecked")
 	public static void readStaticState(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		allBuildings.clear();
-		allBuildings.addAll((Collection<? extends Building>) ois.readObject());
+		allBuildings.addAll((Collection<? extends Building>) ois.readUnshared());
 	}
 
 	public static void writeStaticState(ObjectOutputStream oos) throws IOException {
-		oos.writeObject(allBuildings);
+		oos.writeUnshared(allBuildings);
 	}
 
 	@Override

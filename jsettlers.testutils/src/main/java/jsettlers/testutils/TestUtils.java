@@ -36,6 +36,14 @@ import java.nio.file.Files;
  */
 public class TestUtils {
 
+	/**
+	 * pucgenie: Thest the full writeObject, not writeUnshared only.
+	 * @param <T>
+	 * @param object
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static <T> T serializeAndDeserialize(T object) throws IOException, ClassNotFoundException {
 		ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(byteOutStream);

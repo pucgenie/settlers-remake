@@ -10,6 +10,13 @@ import java.util.TreeMap;
 
 public class SerializationUtils {
 
+	/**
+	 * pucgenie: Don't use writeUnshared here.
+	 * @param <T>
+	 * @param oos
+	 * @param data
+	 * @throws IOException
+	 */
 	public static <T> void writeSparseArray(ObjectOutputStream oos, T[] data) throws IOException {
 		oos.writeInt(data.length);
 
@@ -24,12 +31,21 @@ public class SerializationUtils {
 		oos.flush();
 	}
 
+	/**
+	 * Uses writeUnshared for the map, but the elements inside the map are shared (Java Serialization rules).
+	 * @param <K>
+	 * @param <V>
+	 * @param oos
+	 * @param map
+	 * @throws IOException
+	 */
 	public static <K extends Comparable<K>, V> void writeHashMap(ObjectOutputStream oos, Map<K, V> map) throws IOException {
-		oos.writeObject(new TreeMap<>(map));
+		oos.writeUnshared(new TreeMap<>(map));
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <K extends Comparable<K>, V> HashMap<K, V> readHashMap(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		return new HashMap<>((TreeMap<K, V>) ois.readObject());
+		return new HashMap<>((TreeMap<K, V>) ois.readUnshared());
 	}
 
 	@SuppressWarnings("unchecked")

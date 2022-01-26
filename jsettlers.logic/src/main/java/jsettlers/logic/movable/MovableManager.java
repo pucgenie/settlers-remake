@@ -45,13 +45,13 @@ public final class MovableManager {
 		nextID = ois.readInt();
 		allMovables.clear();
 		fowTeam = -1;
-		allMovables.addAll((Collection<? extends ILogicMovable>) ois.readObject());
+		allMovables.addAll((Collection<? extends ILogicMovable>) ois.readUnshared());
 		movablesByID.putAll(SerializationUtils.readHashMap(ois));
 	}
 
 	public static void writeStaticState(ObjectOutputStream oos) throws IOException {
 		oos.writeInt(nextID);
-		oos.writeObject(allMovables);
+		oos.writeUnshared(allMovables);
 		SerializationUtils.writeHashMap(oos, movablesByID);
 	}
 

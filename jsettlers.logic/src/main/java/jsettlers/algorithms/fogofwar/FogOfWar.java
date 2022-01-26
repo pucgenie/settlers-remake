@@ -120,12 +120,12 @@ public final class FogOfWar implements Serializable {
 		}
 	}
 
-	private void readObject(ObjectInputStream ois) {
+	private void readObject(ObjectInputStream ois) throws IOException {
 		if(ois != null) {
 			try {
 				ois.defaultReadObject();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Invalid or corrupted save data.", e);
 			}
 		}
 		refThread = new FoWRefThread();

@@ -47,11 +47,11 @@ public class OriginalSinglePlayerWinCondition extends WinLoseHandler implements 
 	private transient Set<Supplier<Boolean>> winConditions;
 	private transient Set<Supplier<Boolean>> loseConditions;
 
-	private void readObject(ObjectInputStream ois) {
+	private void readObject(ObjectInputStream ois) throws IOException {
 		try {
 			if (ois != null) ois.defaultReadObject();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			throw new IllegalStateException("Invalid or corrupt save data.", ex);
 		}
 
 		winConditions = Set.of(this::checkKillCondition, this::checkDestroyCondition, this::checkConquerCondition, this::checkSurviveWinCondition, this::checkProduceCondition);
