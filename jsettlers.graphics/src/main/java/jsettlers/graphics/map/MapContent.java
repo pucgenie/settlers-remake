@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java8.util.function.BiFunction;
+import java.util.function.BiFunction;
 
 import go.graphics.GLDrawContext;
 import go.graphics.UIPoint;
@@ -553,7 +553,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 		drawer.drawString(x, y, string);
 	}
 	
-	private final ExecutorService multiworker = Executors.newFixedThreadPool(2);
+	//private final ExecutorService multiworker = Executors.newFixedThreadPool(2);
 
 	/**
 	 * Draws the main content (buildings, settlers, ...), assuming the context is set up.
@@ -776,9 +776,7 @@ public final class MapContent implements RegionContent, IMapInterfaceListener, A
 		} else if ("o".equalsIgnoreCase(keyCode)) {
 			return new Action(EActionType.TOGGLE_ORIGINAL_GRAPHICS);
 		} else if ("q".equalsIgnoreCase(keyCode)) {
-			// TODO: Only show the exit menu.
-			//return new Action(EActionType.EXIT);
-			return null;
+			return new Action(EActionType.ASK_EXIT);
 		} else if ("w".equalsIgnoreCase(keyCode)) {
 			return new Action(EActionType.TOGGLE_FOG_OF_WAR);
 		} else if ("z".equalsIgnoreCase(keyCode)) {

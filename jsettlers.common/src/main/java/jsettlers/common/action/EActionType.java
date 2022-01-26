@@ -380,5 +380,11 @@ public enum EActionType {
 
 	TOGGLE_MUSIC,
 	MUSIC_VOLUME_UP,
-	MUSIC_VOLUME_DOWN;
+	MUSIC_VOLUME_DOWN,
+	
+	/**
+	 * Show exit menu.
+	 * Maybe also do SPEED_SET_PAUSE if not in multiplayer session.
+	 */
+	ASK_EXIT,
 }
