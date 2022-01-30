@@ -14,6 +14,7 @@
  *******************************************************************************/
 package jsettlers.algorithms.fogofwar;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.BitSet;
@@ -93,7 +94,11 @@ public final class FogOfWar implements Serializable {
 			namedRefs = null;
 		}
 
-		readObject(null);
+		try {
+			readObject(null);
+		} catch (IOException e) {
+			throw new AssertionError("impossible to get IOException from readObject(null)");
+		}
 	}
 
 	public void start() {

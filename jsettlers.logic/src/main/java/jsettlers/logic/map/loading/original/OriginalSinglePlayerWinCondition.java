@@ -14,6 +14,7 @@
  *******************************************************************************/
 package jsettlers.logic.map.loading.original;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.BitSet;
@@ -60,7 +61,11 @@ public class OriginalSinglePlayerWinCondition extends WinLoseHandler implements 
 
 	public OriginalSinglePlayerWinCondition(MainGrid mainGrid) {
 		super(mainGrid);
-		readObject(null);
+		try {
+			readObject(null);
+		} catch (IOException e) {
+			throw new AssertionError("impossible to get IOException from readObject(null)");
+		}
 	}
 
 	public void killPlayersToWin(BitSet killToWin) {
