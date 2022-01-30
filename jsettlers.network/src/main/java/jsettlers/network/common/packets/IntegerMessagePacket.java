@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016
+ * Copyright (c) 2015 - 2017
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -12,62 +12,60 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
-package jsettlers.main;
+package jsettlers.network.common.packets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
+import java.util.Objects;
 
-import jsettlers.common.ai.EPlayerType;
-import jsettlers.logic.player.InitialGameState;
-import jsettlers.logic.player.PlayerSetting;
+import jsettlers.network.infrastructure.channel.packet.Packet;
 
 /**
+ *
  * @author Andreas Eberle
+ *
  */
-public class ReplayStartInformation implements Serializable {
+public class IntegerMessagePacket extends Packet {
 
-	private String mapName;
-	private String mapId;
-	private InitialGameState initialGameState;
+	private int value;
 
-	public ReplayStartInformation() {
+	public IntegerMessagePacket() {
 	}
 
-	public ReplayStartInformation(String mapName, String mapId, InitialGameState initialGameState) {
-		this.initialGameState = initialGameState;
-		this.mapName = mapName;
-		this.mapId = mapId;
+	public IntegerMessagePacket(int value) {
+		this.value = value;
 	}
 
-	public String getMapName() {
-		return mapName;
-	}
-
-	public String getMapId() {
-		return mapId;
-	}
-
+	@Override
 	public void serialize(DataOutputStream dos) throws IOException {
-		dos.writeUTF(mapName);
-		dos.writeUTF(mapId);
-
-		initialGameState.serialize(dos);
+		dos.writeInt(value);
 	}
 
+	@Override
 	public void deserialize(DataInputStream dis) throws IOException {
-		mapName = dis.readUTF();
-		mapId = dis.readUTF();
-
-		initialGameState = new InitialGameState(dis);
+		value = dis.readInt();
 	}
 
-	public InitialGameState getInitialGameState() {
-		return initialGameState;
+	@Override
+	public int hashCode() {
+		return Objects.hash(value);
 	}
 
-	public InitialGameState getReplayableGameState() {
-		return initialGameState.clone();
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntegerMessagePacket other = (IntegerMessagePacket) obj;
+		return value == other.value;
 	}
+
+	public int getValue() {
+		return value;
+	}
+
 }
