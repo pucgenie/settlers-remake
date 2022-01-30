@@ -412,7 +412,12 @@ public class JSettlersGame {
 	}
 
 	public static void clearState() {
-		RescheduleTimer.stopAndClear();
+		try {
+			RescheduleTimer.stopAndClear();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		MovableManager.resetState();
 		Building.clearState();
 		MarketBuilding.clearState();
